@@ -1,0 +1,10 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Quiz content is external/user-editable data, not shipped source (see
+# scripts/autoload/quiz_engine.gd) - don't track it in git.
+/data/*.json
+
+# Exported build output - regenerate via `godot --export-release`.
+/builds/
