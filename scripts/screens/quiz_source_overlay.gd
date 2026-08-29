@@ -52,9 +52,19 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
-		_close({})
-		get_viewport().set_input_as_handled()
+	if not (event is InputEventKey and event.pressed and not event.echo):
+		return
+
+	match event.keycode:
+		KEY_ESCAPE:
+			_close({})
+			get_viewport().set_input_as_handled()
+		KEY_UP:
+			_move_cursor(-1)
+			get_viewport().set_input_as_handled()
+		KEY_DOWN:
+			_move_cursor(1)
+			get_viewport().set_input_as_handled()
 
 
 ## Opens the overlay. The lobby passes in the last-used picker state (from
@@ -276,5 +286,13 @@ func _on_questions_request_completed(
 
 
 func _close(new_state: Dictionary) -> void:
+	# Deferred: InputManager.button_pressed can still be mid-dispatch to other
+	# listeners, for example LobbyScreen, for this same press. Closing the
+	# overlay synchronously here would let LobbyScreen's still-open guard
+	# check miss this same press and mistake it for a player that joins.
+	_finish_close.call_deferred(new_state)
+
+
+func _finish_close(new_state: Dictionary) -> void:
 	visible = false
 	closed.emit(new_state)

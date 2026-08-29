@@ -111,7 +111,7 @@ select "ONLINE" to browse categories fetched live from opentdb.com:
 
 | Button | Action |
 |--------|--------|
-| 🟦 / 🟩 | Move the cursor up / down |
+| 🟦 / 🟩, or `↑` / `↓` | Move the cursor up / down |
 | 🟧 / 🟨 | Question amount −5 / +5 (5–50) |
 | 🔴 | Confirm the highlighted row |
 

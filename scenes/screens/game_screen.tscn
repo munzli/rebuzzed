@@ -235,18 +235,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Content" type="VBoxContainer" parent="CountdownOverlay/CenterContainer" unique_id=544720545]
+[node name="Panel" type="PanelContainer" parent="CountdownOverlay/CenterContainer" unique_id=544720544]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_question_box")
+
+[node name="Content" type="VBoxContainer" parent="CountdownOverlay/CenterContainer/Panel" unique_id=544720545]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="CountdownLabel" type="Label" parent="CountdownOverlay/CenterContainer/Content" unique_id=861414164]
+[node name="CountdownLabel" type="Label" parent="CountdownOverlay/CenterContainer/Panel/Content" unique_id=861414164]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "NEXT QUESTION IN..."
 horizontal_alignment = 1
 
-[node name="CountdownPie" parent="CountdownOverlay/CenterContainer/Content" unique_id=982128684 instance=ExtResource("4")]
+[node name="CountdownPie" parent="CountdownOverlay/CenterContainer/Panel/Content" unique_id=982128684 instance=ExtResource("4")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -278,38 +282,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Content" type="VBoxContainer" parent="QuitConfirmOverlay/CenterContainer" unique_id=1253419944]
+[node name="Panel" type="PanelContainer" parent="QuitConfirmOverlay/CenterContainer" unique_id=1253419943]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_question_box")
+
+[node name="Content" type="VBoxContainer" parent="QuitConfirmOverlay/CenterContainer/Panel" unique_id=1253419944]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="MessageLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=1291307923]
+[node name="MessageLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Panel/Content" unique_id=1291307923]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "RETURN TO LOBBY?"
 horizontal_alignment = 1
 
-[node name="HintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=1838257918]
+[node name="HintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Panel/Content" unique_id=1838257918]
 layout_mode = 2
 text = "Current game progress will be lost."
 horizontal_alignment = 1
 
-[node name="ButtonsRow" type="HBoxContainer" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=773306740]
+[node name="KeyHintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Panel/Content" unique_id=1368110540]
 layout_mode = 2
-theme_override_constants/separation = 24
-alignment = 1
-
-[node name="QuitConfirmBtn" type="Button" parent="QuitConfirmOverlay/CenterContainer/Content/ButtonsRow" unique_id=2021277343]
-unique_name_in_owner = true
-layout_mode = 2
-text = "🔴 YES, RETURN TO LOBBY"
-
-[node name="QuitCancelBtn" type="Button" parent="QuitConfirmOverlay/CenterContainer/Content/ButtonsRow" unique_id=932799424]
-unique_name_in_owner = true
-layout_mode = 2
-text = "CANCEL"
-
-[node name="KeyHintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=1368110540]
-layout_mode = 2
-text = "Press 🔴 RED (any player) or click above to confirm — ESC or any other button cancels"
+text = "Press 🔴 RED (any player) to confirm — ESC or any other button cancels"
 horizontal_alignment = 1

@@ -28,14 +28,13 @@ const COUNTDOWN_DURATION := 3.0
 @onready var countdown_overlay: Control = %CountdownOverlay
 @onready var countdown_pie: PieTimer = %CountdownPie
 @onready var quit_confirm_overlay: Control = %QuitConfirmOverlay
-@onready var quit_confirm_btn: Button = %QuitConfirmBtn
-@onready var quit_cancel_btn: Button = %QuitCancelBtn
 
 var display_names: Dictionary = {}
 var stats: Dictionary = {"total_questions": 0, "player_correct": {}}
 var _revealing := false
 var _quit_chord_prev_held := false
 var _first_locked_in_player := ""
+var _countdown_tween: Tween
 
 
 func _ready() -> void:
@@ -47,8 +46,6 @@ func _ready() -> void:
 	countdown_overlay.visible = false
 
 	quit_confirm_overlay.visible = false
-	quit_confirm_btn.pressed.connect(_confirm_quit_to_lobby)
-	quit_cancel_btn.pressed.connect(_cancel_quit_to_lobby)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -108,6 +105,8 @@ func _quit_chord_held() -> bool:
 func _open_quit_confirm() -> void:
 	quit_confirm_overlay.visible = true
 	GameState.stop_timer()
+	if _countdown_tween and _countdown_tween.is_valid():
+		_countdown_tween.pause()
 
 
 func _confirm_quit_to_lobby() -> void:
@@ -121,7 +120,13 @@ func _confirm_quit_to_lobby() -> void:
 
 func _cancel_quit_to_lobby() -> void:
 	quit_confirm_overlay.visible = false
-	GameState.resume_timer()
+	# Every joined player already locked in, so the timer stays stopped
+	# instead of resuming: the round is being (or about to be) revealed, not
+	# still waiting on an answer.
+	if not GameState.are_all_players_locked_in():
+		GameState.resume_timer()
+	if _countdown_tween and _countdown_tween.is_valid():
+		_countdown_tween.play()
 
 
 func _update_hud() -> void:
@@ -289,7 +294,7 @@ func _reveal_answer() -> void:
 	_update_player_indicators()
 	_update_all_scores()
 
-	await get_tree().create_timer(REVEAL_DELAY).timeout
+	await _wait_seconds(REVEAL_DELAY)
 
 	if QuizEngine.has_more_questions():
 		QuizEngine.next_question()
@@ -303,14 +308,26 @@ func _reveal_answer() -> void:
 		game_over_requested.emit()
 
 
-## Smoothly drains a pie timer over COUNTDOWN_DURATION before the next 
+## Smoothly drains a pie timer over COUNTDOWN_DURATION before the next
 ## question appears.
 func _show_countdown() -> void:
 	countdown_overlay.visible = true
 	countdown_pie.progress = 1.0
 
-	var tween := create_tween()
-	tween.tween_property(countdown_pie, "progress", 0.0, COUNTDOWN_DURATION)
-	await tween.finished
+	_countdown_tween = create_tween()
+	_countdown_tween.tween_property(countdown_pie, "progress", 0.0, COUNTDOWN_DURATION)
+	await _countdown_tween.finished
 
 	countdown_overlay.visible = false
+
+
+## Waits for the given duration, in real time. Time does not advance while
+## the "return to lobby" confirm dialog is open, so the reveal delay and
+## question advance stay in sync with what the player sees on screen.
+func _wait_seconds(seconds: float) -> void:
+	var remaining := seconds
+	while remaining > 0.0:
+		await get_tree().process_frame
+		if quit_confirm_overlay.visible:
+			continue
+		remaining -= get_process_delta_time()
