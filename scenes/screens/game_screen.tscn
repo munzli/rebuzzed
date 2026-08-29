@@ -1,11 +1,15 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://bmlqbmkqmivbt"]
 
-[ext_resource type="Script" path="res://scripts/screens/game_screen.gd" id="1"]
+[ext_resource type="Script" uid="uid://cq6eohaohtnam" path="res://scripts/screens/game_screen.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/components/player_score_box.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/components/answer_button.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/components/pie_timer.tscn" id="4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_question_box"]
+content_margin_left = 40.0
+content_margin_top = 28.0
+content_margin_right = 40.0
+content_margin_bottom = 28.0
 bg_color = Color(0.24, 0.24, 0.27, 0.95)
 border_width_left = 3
 border_width_top = 3
@@ -17,10 +21,6 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 anti_aliasing = false
-content_margin_left = 40.0
-content_margin_top = 28.0
-content_margin_right = 40.0
-content_margin_bottom = 28.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_timer_box"]
 bg_color = Color(0.24, 0.24, 0.27, 0.95)
@@ -35,7 +35,7 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 anti_aliasing = false
 
-[node name="GameScreen" type="Control"]
+[node name="GameScreen" type="Control" unique_id=1988573835]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,7 +44,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=549414894]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,7 +53,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.05, 0.16, 1)
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=880230739]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,86 +65,84 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 24
 
-[node name="Layout" type="VBoxContainer" parent="Margin"]
+[node name="Layout" type="VBoxContainer" parent="Margin" unique_id=1488199057]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="HUD" type="HBoxContainer" parent="Margin/Layout"]
+[node name="HUD" type="HBoxContainer" parent="Margin/Layout" unique_id=434652027]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="ScoreBoxP1" parent="Margin/Layout/HUD" instance=ExtResource("2")]
+[node name="ScoreBoxP1" parent="Margin/Layout/HUD" unique_id=685945799 instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
-player_key = "player1"
 
-[node name="ScoreBoxP2" parent="Margin/Layout/HUD" instance=ExtResource("2")]
+[node name="ScoreBoxP2" parent="Margin/Layout/HUD" unique_id=576528160 instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 player_key = "player2"
 
-[node name="ScoreBoxP3" parent="Margin/Layout/HUD" instance=ExtResource("2")]
+[node name="ScoreBoxP3" parent="Margin/Layout/HUD" unique_id=1178083333 instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 player_key = "player3"
 
-[node name="ScoreBoxP4" parent="Margin/Layout/HUD" instance=ExtResource("2")]
+[node name="ScoreBoxP4" parent="Margin/Layout/HUD" unique_id=1953328497 instance=ExtResource("2")]
 unique_name_in_owner = true
 layout_mode = 2
 player_key = "player4"
 
-[node name="QuestionBadge" type="Label" parent="Margin/Layout"]
+[node name="QuestionBadge" type="Label" parent="Margin/Layout" unique_id=1284264461]
 unique_name_in_owner = true
 layout_mode = 2
-horizontal_alignment = 1
 text = "QUESTION 01/10"
+horizontal_alignment = 1
 
-[node name="QuestionBox" type="PanelContainer" parent="Margin/Layout"]
+[node name="QuestionBox" type="PanelContainer" parent="Margin/Layout" unique_id=1906329239]
+custom_minimum_size = Vector2(900, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-custom_minimum_size = Vector2(900, 0)
 theme_override_styles/panel = SubResource("StyleBoxFlat_question_box")
 
-[node name="QuestionText" type="Label" parent="Margin/Layout/QuestionBox"]
+[node name="QuestionText" type="Label" parent="Margin/Layout/QuestionBox" unique_id=447825419]
 unique_name_in_owner = true
-layout_mode = 2
 custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Question text goes here"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "Question text goes here"
 
-[node name="AnswersGrid" type="VBoxContainer" parent="Margin/Layout"]
+[node name="AnswersGrid" type="VBoxContainer" parent="Margin/Layout" unique_id=2132248792]
+custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-custom_minimum_size = Vector2(700, 0)
 theme_override_constants/separation = 12
 
-[node name="AnswerBlue" parent="Margin/Layout/AnswersGrid" instance=ExtResource("3")]
+[node name="AnswerBlue" parent="Margin/Layout/AnswersGrid" unique_id=1458550298 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
-color_name = "blue"
 
-[node name="AnswerOrange" parent="Margin/Layout/AnswersGrid" instance=ExtResource("3")]
+[node name="AnswerOrange" parent="Margin/Layout/AnswersGrid" unique_id=1050062595 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
 color_name = "orange"
 
-[node name="AnswerGreen" parent="Margin/Layout/AnswersGrid" instance=ExtResource("3")]
+[node name="AnswerGreen" parent="Margin/Layout/AnswersGrid" unique_id=636094236 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
 color_name = "green"
 
-[node name="AnswerYellow" parent="Margin/Layout/AnswersGrid" instance=ExtResource("3")]
+[node name="AnswerYellow" parent="Margin/Layout/AnswersGrid" unique_id=253060384 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
 color_name = "yellow"
 
-[node name="TimerFooter" type="Control" parent="."]
+[node name="TimerFooter" type="Control" parent="." unique_id=1205775200]
 layout_mode = 1
-anchor_left = 0.0
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -154,7 +152,7 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Center" type="CenterContainer" parent="TimerFooter"]
+[node name="Center" type="CenterContainer" parent="TimerFooter" unique_id=1287660627]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -163,27 +161,27 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TimerBox" type="PanelContainer" parent="TimerFooter/Center"]
+[node name="TimerBox" type="PanelContainer" parent="TimerFooter/Center" unique_id=1340536902]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_timer_box")
 
-[node name="Margin" type="MarginContainer" parent="TimerFooter/Center/TimerBox"]
+[node name="Margin" type="MarginContainer" parent="TimerFooter/Center/TimerBox" unique_id=597004868]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 8
 
-[node name="TimerRow" type="HBoxContainer" parent="TimerFooter/Center/TimerBox/Margin"]
+[node name="TimerRow" type="HBoxContainer" parent="TimerFooter/Center/TimerBox/Margin" unique_id=557821620]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="TimerIconSlot" type="Control" parent="TimerFooter/Center/TimerBox/Margin/TimerRow"]
+[node name="TimerIconSlot" type="Control" parent="TimerFooter/Center/TimerBox/Margin/TimerRow" unique_id=838834755]
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 
-[node name="TimerIcon" type="Label" parent="TimerFooter/Center/TimerBox/Margin/TimerRow/TimerIconSlot"]
+[node name="TimerIcon" type="Label" parent="TimerFooter/Center/TimerBox/Margin/TimerRow/TimerIconSlot" unique_id=2000251243]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -193,17 +191,17 @@ offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 52
+text = "⏱️"
 horizontal_alignment = 1
 vertical_alignment = 1
-text = "⏱️"
 
-[node name="TimerValue" type="Label" parent="TimerFooter/Center/TimerBox/Margin/TimerRow"]
+[node name="TimerValue" type="Label" parent="TimerFooter/Center/TimerBox/Margin/TimerRow" unique_id=389801764]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "0:30"
 
-[node name="CountdownOverlay" type="Control" parent="."]
+[node name="CountdownOverlay" type="Control" parent="." unique_id=936403836]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -212,7 +210,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dim" type="ColorRect" parent="CountdownOverlay"]
+[node name="Dim" type="ColorRect" parent="CountdownOverlay" unique_id=710519941]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -221,7 +219,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.85)
 
-[node name="CenterContainer" type="CenterContainer" parent="CountdownOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="CountdownOverlay" unique_id=2069621908]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -229,23 +227,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Content" type="VBoxContainer" parent="CountdownOverlay/CenterContainer"]
+[node name="Content" type="VBoxContainer" parent="CountdownOverlay/CenterContainer" unique_id=544720545]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="CountdownLabel" type="Label" parent="CountdownOverlay/CenterContainer/Content"]
+[node name="CountdownLabel" type="Label" parent="CountdownOverlay/CenterContainer/Content" unique_id=861414164]
 layout_mode = 2
-horizontal_alignment = 1
 theme_override_font_sizes/font_size = 24
 text = "NEXT QUESTION IN..."
+horizontal_alignment = 1
 
-[node name="CountdownPie" parent="CountdownOverlay/CenterContainer/Content" instance=ExtResource("4")]
+[node name="CountdownPie" parent="CountdownOverlay/CenterContainer/Content" unique_id=982128684 instance=ExtResource("4")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="QuitConfirmOverlay" type="Control" parent="."]
+[node name="QuitConfirmOverlay" type="Control" parent="." unique_id=547401003]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -255,7 +253,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dim" type="ColorRect" parent="QuitConfirmOverlay"]
+[node name="Dim" type="ColorRect" parent="QuitConfirmOverlay" unique_id=1818270456]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -264,7 +262,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.85)
 
-[node name="CenterContainer" type="CenterContainer" parent="QuitConfirmOverlay"]
+[node name="CenterContainer" type="CenterContainer" parent="QuitConfirmOverlay" unique_id=1893619942]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -272,38 +270,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Content" type="VBoxContainer" parent="QuitConfirmOverlay/CenterContainer"]
+[node name="Content" type="VBoxContainer" parent="QuitConfirmOverlay/CenterContainer" unique_id=1253419944]
 layout_mode = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="MessageLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content"]
+[node name="MessageLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=1291307923]
 layout_mode = 2
-horizontal_alignment = 1
 theme_override_font_sizes/font_size = 28
 text = "RETURN TO LOBBY?"
-
-[node name="HintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content"]
-layout_mode = 2
 horizontal_alignment = 1
-text = "Current game progress will be lost."
 
-[node name="ButtonsRow" type="HBoxContainer" parent="QuitConfirmOverlay/CenterContainer/Content"]
+[node name="HintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=1838257918]
 layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 24
+text = "Current game progress will be lost."
+horizontal_alignment = 1
 
-[node name="QuitConfirmBtn" type="Button" parent="QuitConfirmOverlay/CenterContainer/Content/ButtonsRow"]
+[node name="ButtonsRow" type="HBoxContainer" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=773306740]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="QuitConfirmBtn" type="Button" parent="QuitConfirmOverlay/CenterContainer/Content/ButtonsRow" unique_id=2021277343]
 unique_name_in_owner = true
 layout_mode = 2
 text = "🔴 YES, RETURN TO LOBBY"
 
-[node name="QuitCancelBtn" type="Button" parent="QuitConfirmOverlay/CenterContainer/Content/ButtonsRow"]
+[node name="QuitCancelBtn" type="Button" parent="QuitConfirmOverlay/CenterContainer/Content/ButtonsRow" unique_id=932799424]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CANCEL"
 
-[node name="KeyHintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content"]
+[node name="KeyHintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Content" unique_id=1368110540]
 layout_mode = 2
-horizontal_alignment = 1
 text = "Press 🔴 RED (any player) or click above to confirm — ESC or any other button cancels"
+horizontal_alignment = 1

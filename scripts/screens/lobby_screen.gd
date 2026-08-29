@@ -27,13 +27,12 @@ const KEYBOARD_HELP_FONT_SIZE := 14
 const KEYBOARD_HELP_EMOJI_FONT_SIZE := 22
 const KEYBOARD_HELP_EMOJI_SLOT_SIZE := Vector2(32, 32)
 
-## Primary key per player action, mirroring InputManager.KEYBOARD_MAP (P2 to
-## P4 are the development and test convenience keys).
+## Primary key per player action, mirroring InputManager.KEYBOARD_MAP
 const KEYBOARD_HELP := [
-	{"label": "P1", "red": "J", "blue": "1", "orange": "2", "green": "3", "yellow": "4"},
-	{"label": "P2", "red": "U", "blue": "7", "orange": "8", "green": "9", "yellow": "0"},
-	{"label": "P3", "red": "N", "blue": "Num1", "orange": "Num2", "green": "Num3", "yellow": "Num4"},
-	{"label": "P4", "red": "M", "blue": "Num6", "orange": "Num7", "green": "Num8", "yellow": "Num9"},
+	{"label": "P1", "red": "1", "blue": "Q", "orange": "A", "green": "Z/Y", "yellow": "X"},
+	{"label": "P2", "red": "3", "blue": "E", "orange": "D", "green": "C", "yellow": "V"},
+	{"label": "P3", "red": "5", "blue": "T", "orange": "G", "green": "B", "yellow": "N"},
+	{"label": "P4", "red": "7", "blue": "U", "orange": "J", "green": "K", "yellow": "L"},
 ]
 
 @onready var name_inputs: Dictionary = {

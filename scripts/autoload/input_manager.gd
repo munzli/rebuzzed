@@ -20,38 +20,35 @@ const BUTTON_MAP := {
 }
 const RAW_BUTTON_COUNT := 20
 
-## Keyboard fallback. Players 2 to 4 are a convenience for development and
-## test. No real 4-controller setup is available during development.
+## Keyboard fallback. 1,3,5,7 are player buzzers while characters below are the
+## colored answers.
 const KEYBOARD_MAP := {
-	KEY_J: {"player": "player1", "color": "red"},
+	KEY_1: {"player": "player1", "color": "red"},
 	KEY_ENTER: {"player": "player1", "color": "red"},
 	KEY_SPACE: {"player": "player1", "color": "red"},
-	KEY_1: {"player": "player1", "color": "blue"},
-	KEY_B: {"player": "player1", "color": "blue"},
-	KEY_2: {"player": "player1", "color": "orange"},
-	KEY_O: {"player": "player1", "color": "orange"},
-	KEY_3: {"player": "player1", "color": "green"},
-	KEY_G: {"player": "player1", "color": "green"},
-	KEY_4: {"player": "player1", "color": "yellow"},
-	KEY_Y: {"player": "player1", "color": "yellow"},
+	KEY_Q: {"player": "player1", "color": "blue"},
+	KEY_A: {"player": "player1", "color": "orange"},
+	KEY_Y: {"player": "player1", "color": "green"},
+	KEY_Z: {"player": "player1", "color": "green"},
+	KEY_X: {"player": "player1", "color": "yellow"},
 
-	KEY_U: {"player": "player2", "color": "red"},
-	KEY_7: {"player": "player2", "color": "blue"},
-	KEY_8: {"player": "player2", "color": "orange"},
-	KEY_9: {"player": "player2", "color": "green"},
-	KEY_0: {"player": "player2", "color": "yellow"},
+	KEY_3: {"player": "player2", "color": "red"},
+	KEY_E: {"player": "player2", "color": "blue"},
+	KEY_D: {"player": "player2", "color": "orange"},
+	KEY_C: {"player": "player2", "color": "green"},
+	KEY_V: {"player": "player2", "color": "yellow"},
 
-	KEY_N: {"player": "player3", "color": "red"},
-	KEY_KP_1: {"player": "player3", "color": "blue"},
-	KEY_KP_2: {"player": "player3", "color": "orange"},
-	KEY_KP_3: {"player": "player3", "color": "green"},
-	KEY_KP_4: {"player": "player3", "color": "yellow"},
+	KEY_5: {"player": "player3", "color": "red"},
+	KEY_T: {"player": "player3", "color": "blue"},
+	KEY_G: {"player": "player3", "color": "orange"},
+	KEY_B: {"player": "player3", "color": "green"},
+	KEY_N: {"player": "player3", "color": "yellow"},
 
-	KEY_M: {"player": "player4", "color": "red"},
-	KEY_KP_6: {"player": "player4", "color": "blue"},
-	KEY_KP_7: {"player": "player4", "color": "orange"},
-	KEY_KP_8: {"player": "player4", "color": "green"},
-	KEY_KP_9: {"player": "player4", "color": "yellow"},
+	KEY_7: {"player": "player4", "color": "red"},
+	KEY_U: {"player": "player4", "color": "blue"},
+	KEY_J: {"player": "player4", "color": "orange"},
+	KEY_K: {"player": "player4", "color": "green"},
+	KEY_L: {"player": "player4", "color": "yellow"},
 }
 
 var index_to_button: Dictionary = {}

@@ -4,13 +4,13 @@ class_name PlayerScoreBox
 
 ## Reuses the same 4 colors as the answer buttons, in the same order.
 const PLAYER_COLORS := {
-	"player1": Color("0066ff"),
-	"player2": Color("ff6600"),
-	"player3": Color("00cc44"),
-	"player4": Color("ffcc00"),
+	"player1": Color("1976d2"),
+	"player2": Color("ff9800"),
+	"player3": Color("7cb342"),
+	"player4": Color("ffcc32"),
 }
 
-const FIRST_LOCKED_IN_COLOR := Color("ffd700")
+const FIRST_LOCKED_IN_COLOR := Color("ffcc32")
 
 @export var player_key: String = "player1"
 

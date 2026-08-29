@@ -3,6 +3,8 @@ extends Control
 
 signal restart_requested()
 
+const RANK_ICON_SIZE := Vector2(60, 56)
+
 @onready var final_scores_list: VBoxContainer = %FinalScoresList
 @onready var play_again_btn: Button = %PlayAgainBtn
 
@@ -43,8 +45,10 @@ func _build_score_row(
 
 	var rank_label := Label.new()
 	rank_label.text = _rank_text(rank_index)
-	rank_label.custom_minimum_size = Vector2(60, 0)
+	# A fixed size (both axes) keeps every row the same height.
+	rank_label.custom_minimum_size = RANK_ICON_SIZE
 	rank_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	rank_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	# Medal emoji (top 3) need a bigger size than the "#4" text fallback, to
 	# look right next to the pixel font. The bundled color emoji font draws
 	# glyphs with a lot of internal padding relative to their advance width.

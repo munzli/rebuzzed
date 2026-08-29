@@ -5,18 +5,18 @@ class_name AnswerButton
 signal answer_clicked(color: String)
 
 const COLOR_HEX := {
-	"blue": Color("0066ff"),
-	"orange": Color("ff6600"),
-	"green": Color("00cc44"),
-	"yellow": Color("ffcc00"),
+	"blue": Color("1976d2"),
+	"orange": Color("ff9800"),
+	"green": Color("7cb342"),
+	"yellow": Color("ffcc32"),
 }
 
 ## Reuses the same 4 colors as the answer buttons above, in the same order.
 const PLAYER_COLORS := {
-	"player1": Color("0066ff"),
-	"player2": Color("ff6600"),
-	"player3": Color("00cc44"),
-	"player4": Color("ffcc00"),
+	"player1": Color("1976d2"),
+	"player2": Color("ff9800"),
+	"player3": Color("7cb342"),
+	"player4": Color("ffcc32"),
 }
 
 @export var color_name: String = "blue"

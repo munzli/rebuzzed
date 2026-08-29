@@ -74,15 +74,14 @@ cancels.
 
 ### Keyboard controls
 
-Player 1 mirrors the controller layout. Players 2 to 4 are a testing
-convenience for play without physical controllers.
+Used as a testing convenience for play without physical controllers.
 
 | Player | Join / Lock in | Blue | Orange | Green | Yellow |
 |--------|-----------------|------|--------|-------|--------|
-| P1 | `J` / `Enter` / `Space` | `1` / `B` | `2` / `O` | `3` / `G` | `4` / `Y` |
-| P2 | `U` | `7` | `8` | `9` | `0` |
-| P3 | `N` | Num `1` | Num `2` | Num `3` | Num `4` |
-| P4 | `M` | Num `6` | Num `7` | Num `8` | Num `9` |
+| P1 | `1` / `Enter` / `Space` | `Q` | `A` | `Z` / `Y` | `X` |
+| P2 | `3` | `E` | `D` | `C` | `V` |
+| P3 | `5` | `T` | `G` | `B` | `N` |
+| P4 | `7` | `U` | `J` | `K` | `L` |
 
 `F11` toggles fullscreen. `ESC` also opens the "return to lobby"
 confirmation during a game.
@@ -115,9 +114,9 @@ rebuzzed/
 │   ├── components/           # Answer button, player score box, pie timer
 │   └── debug/                # Standalone controller button-mapping test scene
 └── scripts/
-    ├── autoload/             # QuizEngine, GameState, InputManager, FontSetup
-    ├── screens/
-    └── components/
+	├── autoload/             # QuizEngine, GameState, InputManager, FontSetup
+	├── screens/
+	└── components/
 ```
 
 ## Verifying the Buzz Controller Button Mapping
