@@ -54,7 +54,11 @@ const KEYBOARD_HELP := [
 	"player4": %SlotPanelP4,
 }
 @onready var instruction_label: Label = %InstructionLabel
+@onready var quiz_source_hint: Label = %QuizSourceHint
+@onready var quiz_status_label: Label = %QuizStatusLabel
+@onready var quiz_source_overlay: QuizSourceOverlay = %QuizSourceOverlay
 @onready var sequence_row: HBoxContainer = %SequenceRow
+@onready var hint_label: Label = %HintLabel
 @onready var keyboard_grid: GridContainer = %KeyboardGrid
 @onready var keyboard_help_panel: PanelContainer = %Panel
 
@@ -62,6 +66,7 @@ var _joined: Dictionary = {"player1": false, "player2": false, "player3": false,
 var _start_sequence: Array[String] = []
 var _sequence_timer: Timer
 var _sequence_icon_labels: Array[Label] = []
+var _quiz_source_state: Dictionary = {}
 
 
 func _ready() -> void:
@@ -72,10 +77,12 @@ func _ready() -> void:
 	add_child(_sequence_timer)
 
 	InputManager.button_pressed.connect(_on_button_pressed)
+	quiz_source_overlay.closed.connect(_on_quiz_source_closed)
 	_style_keyboard_help_panel()
 	_build_keyboard_help()
 	_build_sequence_row()
-	_load_player_names()
+	_load_settings()
+	_update_quiz_status_label()
 	activate()
 
 
@@ -102,9 +109,10 @@ func _settings_path() -> String:
 	return QuizEngine.get_external_data_dir().path_join(QuizEngine.SETTINGS_FILENAME)
 
 
-## Pre-fills the name fields with whoever played last, read from
-## data/settings.json (same external, user-editable folder as the quiz files).
-func _load_player_names() -> void:
+## Pre-fills the name fields with whoever played last, and restores the last
+## quiz source picker state, both read from data/settings.json (same
+## external, user-editable folder as the quiz files).
+func _load_settings() -> void:
 	var path := _settings_path()
 	if not FileAccess.file_exists(path):
 		return
@@ -124,10 +132,12 @@ func _load_player_names() -> void:
 		if names.has(key):
 			(name_inputs[key] as LineEdit).text = str(names[key])
 
+	_quiz_source_state = parsed.get("quiz_source", {})
 
-## Saves whatever text is currently in the name fields, so the fields show
-## it again the next time a player starts the game.
-func _save_player_names() -> void:
+
+## Saves whatever text is currently in the name fields and the current quiz
+## source picker state, so both are restored next time the game is launched.
+func _save_settings() -> void:
 	var names := {}
 	for key in name_inputs.keys():
 		names[key] = (name_inputs[key] as LineEdit).text
@@ -135,7 +145,9 @@ func _save_player_names() -> void:
 	var file := FileAccess.open(_settings_path(), FileAccess.WRITE)
 	if not file:
 		return
-	file.store_string(JSON.stringify({"player_names": names}, "\t"))
+	file.store_string(
+		JSON.stringify({"player_names": names, "quiz_source": _quiz_source_state}, "\t")
+	)
 	file.close()
 
 
@@ -226,11 +238,32 @@ func _keyboard_help_label(text: String, emphasized: bool = false) -> Label:
 func _on_button_pressed(player: String, color: String) -> void:
 	if not is_visible_in_tree():
 		return
+	if quiz_source_overlay.visible:
+		return
 
 	if color == "red":
 		_player_join(player)
+	elif color == "yellow" and _joined.values().count(true) == 0:
+		_open_quiz_source()
 	elif REQUIRED_SEQUENCE.has(color):
 		_handle_start_sequence(color)
+
+
+func _open_quiz_source() -> void:
+	quiz_source_overlay.open(_quiz_source_state)
+
+
+func _on_quiz_source_closed(new_state: Dictionary) -> void:
+	if not new_state.is_empty():
+		_quiz_source_state = new_state
+		_save_settings()
+	_update_quiz_status_label()
+
+
+func _update_quiz_status_label() -> void:
+	quiz_status_label.text = (
+		"Quiz: %s (%d questions)" % [QuizEngine.get_title(), QuizEngine.total_questions]
+	)
 
 
 func _player_join(player: String) -> void:
@@ -280,8 +313,18 @@ func _on_sequence_timeout() -> void:
 func _update_instruction() -> void:
 	var joined_count: int = _joined.values().count(true)
 
+	# sequence_row replaces instruction_label (never shown together), and both
+	# share the same custom_minimum_size, so toggling .visible between them
+	# does not shift the rest of the lobby content.
 	instruction_label.visible = joined_count == 0
 	sequence_row.visible = joined_count > 0
+
+	# quiz_source_hint and hint_label have no same-height replacement, so they
+	# fade instead of hiding: this keeps their reserved height in the
+	# VBoxContainer, so the lobby content still does not shift when they
+	# disappear.
+	quiz_source_hint.modulate.a = 1.0 if joined_count == 0 else 0.0
+	hint_label.modulate.a = 1.0 if joined_count == 0 else 0.0
 
 	if joined_count == 0:
 		instruction_label.text = "PRESS 🔴 TO JOIN"
@@ -295,7 +338,7 @@ func _update_instruction() -> void:
 
 
 func _begin_game() -> void:
-	_save_player_names()
+	_save_settings()
 	QuizEngine.reset()
 	GameState.reset_game()
 	for key in _joined.keys():

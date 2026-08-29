@@ -1,37 +1,35 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://c1vcg0a68cw4u"]
 
-[ext_resource type="Script" path="res://scripts/components/player_score_box.gd" id="1"]
+[ext_resource type="Script" uid="uid://dnks87vjfjul3" path="res://scripts/components/player_score_box.gd" id="1"]
 
-[node name="PlayerScoreBox" type="PanelContainer"]
+[node name="PlayerScoreBox" type="PanelContainer" unique_id=1127630287]
 custom_minimum_size = Vector2(160, 90)
 script = ExtResource("1")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1480080882]
 layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="VBoxContainer"]
+[node name="NameLabel" type="Label" parent="VBoxContainer" unique_id=54315659]
 layout_mode = 2
-horizontal_alignment = 1
 text = "P1"
-
-[node name="ScoreLabel" type="Label" parent="VBoxContainer"]
-layout_mode = 2
 horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="VBoxContainer" unique_id=1743212550]
+layout_mode = 2
 text = "0"
+horizontal_alignment = 1
 
-[node name="StatusLabel" type="Label" parent="VBoxContainer"]
+[node name="StatusLabel" type="Label" parent="VBoxContainer" unique_id=955973065]
 layout_mode = 2
 horizontal_alignment = 1
-text = ""
 
-[node name="IncorrectMark" type="Label" parent="."]
-layout_mode = 2
+[node name="IncorrectMark" type="Label" parent="." unique_id=501801204]
 visible = false
-mouse_filter = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 64
-theme_override_colors/font_color = Color(1, 0.1, 0.1, 0.9)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.956863, 0.262745, 0.211765, 0.9)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
 theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 64
 text = "X"
+horizontal_alignment = 1
+vertical_alignment = 1

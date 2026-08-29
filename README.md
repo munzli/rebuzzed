@@ -18,6 +18,8 @@ PlayStation Buzz USB controllers, and it is built with
   JSON files to `data/`. The game pools every question from every file
   together and shuffles them. Quiz files stay external and user-editable,
   not baked into the game binary.
+- **Online quiz source.** Instead of local files, the lobby can fetch a
+  category live from opentdb.com — see [Quiz content](#quiz-content).
 - **Difficulty-based scoring.** Base points scale with the difficulty of the
   question (easy, medium, or hard), plus a speed bonus for a fast lock-in.
 - **"First to lock in" highlight.** The fastest player each round gets a
@@ -72,6 +74,9 @@ Hold 🟦 and 🟨 together, from any single player, at any point during a game.
 This opens a "return to lobby" confirmation. Red confirms. Any other button
 cancels.
 
+Before any player joins, press 🟨 alone to open the quiz source picker (see
+[Quiz content](#quiz-content)).
+
 ### Keyboard controls
 
 Used as a testing convenience for play without physical controllers.
@@ -88,18 +93,42 @@ confirmation during a game.
 
 ## Quiz content
 
+Rebuzzed pools questions from one of two sources, picked in the lobby:
+local JSON files, or a category fetched live from
+[opentdb.com](https://opentdb.com/).
+
+### Local files
+
 Add any number of [opentdb.com](https://opentdb.com/api_config.php)-format
-JSON files to the `data/` folder (see `data/music-opentdb.json` for an
-example).
+JSON files to the `data/` folder (see `data/all-opentdb.json` for an
+example). The game pools every question from every file together, and
+shuffles them into a random order each game.
 
-The game pools every question from every file together, and shuffles them
-into a random order each game. Base points per question scale with the
-difficulty of the question (`easy` = 100, `medium` = 150, `hard` = 200),
-plus a speed bonus for a fast lock-in.
+### Online (opentdb.com)
 
-The `data/` folder also holds `settings.json` (saved player names). The
-game creates this file automatically, and it is not part of the exported
-build. You can edit both files without a rebuild of the game.
+Before any player joins, press 🟨 to open the quiz source picker, then
+select "ONLINE" to browse categories fetched live from opentdb.com:
+
+| Button | Action |
+|--------|--------|
+| 🟦 / 🟩 | Move the cursor up / down |
+| 🟧 / 🟨 | Question amount −5 / +5 (5–50) |
+| 🔴 | Confirm the highlighted row |
+
+The top row of the category list, "← BACK", returns to the local/online
+choice. The picker remembers the last source, category, and amount chosen,
+and restores them next time it opens.
+
+### Scoring
+
+Base points per question scale with the difficulty of the question
+(`easy` = 100, `medium` = 150, `hard` = 200), plus a speed bonus for a fast
+lock-in.
+
+The `data/` folder also holds `settings.json` (saved player names and the
+last-used quiz source picker state). The game creates this file
+automatically, and it is not part of the exported build. You can edit it,
+or any local quiz file, without a rebuild of the game.
 
 ## Project structure
 

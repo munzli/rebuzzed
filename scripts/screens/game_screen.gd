@@ -21,6 +21,7 @@ const COUNTDOWN_DURATION := 3.0
 	"green": %AnswerGreen,
 	"yellow": %AnswerYellow,
 }
+@onready var category_badge: Label = %CategoryBadge
 @onready var question_badge: Label = %QuestionBadge
 @onready var question_text: Label = %QuestionText
 @onready var timer_value_label: Label = %TimerValue
@@ -84,6 +85,7 @@ func start_game(names: Dictionary) -> void:
 	stats = {"total_questions": QuizEngine.total_questions, "player_correct": {}}
 	_revealing = false
 
+	category_badge.text = QuizEngine.get_title().to_upper()
 	_update_hud()
 	_display_question(QuizEngine.get_current_question())
 	_update_progress()
@@ -249,7 +251,7 @@ func _on_timer_updated(value: int) -> void:
 	timer_value_label.text = "%d:%02d" % [mins, secs]
 
 	if value <= 10:
-		timer_value_label.add_theme_color_override("font_color", Color("ff0033"))
+		timer_value_label.add_theme_color_override("font_color", Color("f44336"))
 	else:
 		timer_value_label.remove_theme_color_override("font_color")
 

@@ -1,0 +1,106 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/screens/quiz_source_overlay.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 40.0
+content_margin_top = 28.0
+content_margin_right = 40.0
+content_margin_bottom = 28.0
+bg_color = Color(0.24, 0.24, 0.27, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.5, 0.5, 0.55, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[node name="QuizSourceOverlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="CategoryRequest" type="HTTPRequest" parent="."]
+unique_name_in_owner = true
+
+[node name="QuestionsRequest" type="HTTPRequest" parent="."]
+unique_name_in_owner = true
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Content" type="VBoxContainer" parent="CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "QUIZ SOURCE"
+horizontal_alignment = 1
+
+[node name="AmountRow" type="HBoxContainer" parent="CenterContainer/Panel/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+alignment = 1
+
+[node name="AmountLabel" type="Label" parent="CenterContainer/Panel/Content/AmountRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "QUESTIONS: 15   (🟧 −5 / 🟨 +5)"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(480, 280)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="RowsContainer" type="VBoxContainer" parent="CenterContainer/Panel/Content/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="StatusLabel" type="Label" parent="CenterContainer/Panel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
+text = ""
+horizontal_alignment = 1
+
+[node name="HelpLabel" type="Label" parent="CenterContainer/Panel/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "🟦/🟩 move   🟧/🟨 amount −/+   🔴 confirm"
+horizontal_alignment = 1
+modulate = Color(1, 1, 1, 0.6)

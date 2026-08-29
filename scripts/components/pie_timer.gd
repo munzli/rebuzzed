@@ -4,7 +4,7 @@ class_name PieTimer
 ## needed). `progress` is a 0..1 fraction: 1.0 = full circle, 0.0 = empty,
 ## sweeping clockwise from the top like a clock face.
 
-@export var fill_color: Color = Color("ff0033")
+@export var fill_color: Color = Color("f44336")
 @export var background_color: Color = Color(1, 1, 1, 0.15)
 @export var segments: int = 64
 

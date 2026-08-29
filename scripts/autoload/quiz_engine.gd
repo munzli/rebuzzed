@@ -104,20 +104,23 @@ func load_quiz() -> Dictionary:
 		pooled_questions.append_array(normalized.questions)
 		titles.append(normalized.quizTitle)
 
-	pooled_questions.shuffle()
-	for i in range(pooled_questions.size()):
-		pooled_questions[i].id = i + 1
-
-	quiz = {"quizTitle": _combined_title(titles), "questions": pooled_questions}
-	questions = pooled_questions
-	total_questions = questions.size()
-	current_index = 0
-
-	print(
-		"[QuizEngine] Loaded %d questions from %d file(s) in %s"
-		% [total_questions, titles.size(), dir_path]
+	return _finalize_quiz(
+		pooled_questions,
+		_combined_title(titles),
+		"from %d file(s) in %s" % [titles.size(), dir_path]
 	)
-	return quiz
+
+
+## Loads a quiz from an opentdb.com API payload already fetched over the
+## network (see QuizSourceOverlay), instead of a local file. Reuses the same
+## normalization and difficulty-to-points mapping as local files, because
+## the real API response has the same shape as the local file format.
+func load_remote_quiz(payload: Dictionary, quiz_title: String) -> Dictionary:
+	payload["quizTitle"] = quiz_title
+	var normalized := _normalize_opentdb(payload)
+	return _finalize_quiz(
+		normalized.questions, normalized.quizTitle, "from opentdb.com (%s)" % quiz_title
+	)
 
 
 func get_current_question() -> Variant:
@@ -192,6 +195,22 @@ func _combined_title(titles: Array[String]) -> String:
 	if titles.size() == 1:
 		return titles[0]
 	return "Mixed Quiz (%d sets)" % titles.size()
+
+
+## Shuffles the pooled questions, assigns sequential ids, and stores the
+## result as the active quiz. Shared by load_quiz() and load_remote_quiz().
+func _finalize_quiz(pooled_questions: Array, quiz_title: String, log_suffix: String) -> Dictionary:
+	pooled_questions.shuffle()
+	for i in range(pooled_questions.size()):
+		pooled_questions[i].id = i + 1
+
+	quiz = {"quizTitle": quiz_title, "questions": pooled_questions}
+	questions = pooled_questions
+	total_questions = questions.size()
+	current_index = 0
+
+	print("[QuizEngine] Loaded %d questions %s" % [total_questions, log_suffix])
+	return quiz
 
 
 func _read_json_file(path: String) -> Dictionary:

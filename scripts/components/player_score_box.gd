@@ -10,8 +10,6 @@ const PLAYER_COLORS := {
 	"player4": Color("ffcc32"),
 }
 
-const FIRST_LOCKED_IN_COLOR := Color("ffcc32")
-
 @export var player_key: String = "player1"
 
 @onready var name_label: Label = $VBoxContainer/NameLabel
@@ -58,8 +56,6 @@ func set_first_locked_in(is_first: bool) -> void:
 
 func _apply_border_color() -> void:
 	var c: Color = PLAYER_COLORS.get(player_key, Color.WHITE)
-	if _first_locked_in:
-		c = FIRST_LOCKED_IN_COLOR
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0, 0, 0, 0.85)
 	style.border_color = c

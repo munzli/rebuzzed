@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bdl11d16ftb2b"]
 
 [ext_resource type="Script" uid="uid://ckwqwbe6n4plh" path="res://scripts/screens/lobby_screen.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/screens/quiz_source_overlay.tscn" id="2"]
 
 [node name="LobbyScreen" type="Control" unique_id=951163763]
 layout_mode = 3
@@ -43,6 +44,14 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "QUIZ CHALLENGE"
+horizontal_alignment = 1
+
+[node name="QuizStatusLabel" type="Label" parent="Center/Content" unique_id=1293377880]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Quiz: —"
 horizontal_alignment = 1
 
 [node name="PlayerSlots" type="HBoxContainer" parent="Center/Content" unique_id=1817753782]
@@ -179,6 +188,14 @@ text = "PRESS 🔴 TO JOIN"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="QuizSourceHint" type="Label" parent="Center/Content" unique_id=2057771635]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "🟨 QUIZ SOURCE"
+horizontal_alignment = 1
+
 [node name="SequenceRow" type="HBoxContainer" parent="Center/Content" unique_id=2020724785]
 unique_name_in_owner = true
 visible = false
@@ -188,6 +205,7 @@ theme_override_constants/separation = 8
 alignment = 1
 
 [node name="HintLabel" type="Label" parent="Center/Content" unique_id=92164455]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Then press 🟦 → 🟧 → 🟩 → 🟨 to start"
 horizontal_alignment = 1
@@ -240,3 +258,8 @@ layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 2
 columns = 6
+
+[node name="QuizSourceOverlay" parent="." unique_id=1289110040 instance=ExtResource("2")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
