@@ -93,9 +93,10 @@ confirmation during a game.
 
 ## Quiz content
 
-Rebuzzed pools questions from one of two sources, picked in the lobby:
+Rebuzzed pools questions from one of three sources, picked in the lobby:
 local JSON files, or a category fetched live from
-[opentdb.com](https://opentdb.com/).
+[opentdb.com](https://opentdb.com/) or
+[the-trivia-api.com](https://the-trivia-api.com/).
 
 ### Local files
 
@@ -104,10 +105,11 @@ JSON files to the `data/` folder (see `data/all-opentdb.json` for an
 example). The game pools every question from every file together, and
 shuffles them into a random order each game.
 
-### Online (opentdb.com)
+### Online (opentdb.com or the-trivia-api.com)
 
 Before any player joins, press 🟨 to open the quiz source picker, then
-select "ONLINE" to browse categories fetched live from opentdb.com:
+select "OPENTDB.COM" or "THE TRIVIA API" to browse categories fetched live
+from that source:
 
 | Button | Action |
 |--------|--------|
@@ -115,9 +117,12 @@ select "ONLINE" to browse categories fetched live from opentdb.com:
 | 🟧 / 🟨 | Question amount −5 / +5 (5–50) |
 | 🔴 | Confirm the highlighted row |
 
-The top row of the category list, "← BACK", returns to the local/online
-choice. The picker remembers the last source, category, and amount chosen,
-and restores them next time it opens.
+The top row of the category list, "← BACK", returns to the source choice.
+The picker remembers the last source, category, and amount chosen, and
+restores them next time it opens.
+
+Both sources fetch their category list live: opentdb.com from
+`api_category.php`, the-trivia-api.com from its `/v2/metadata` endpoint.
 
 ### Scoring
 

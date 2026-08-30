@@ -1,19 +1,27 @@
 extends Node
-## Loads and sequences quiz questions from every opentdb.com-format JSON file
-## in the data folder. Autoloaded as "QuizEngine".
+## Loads and sequences quiz questions, from local opentdb.com-format JSON
+## files or from a live fetch (see QuizSourceOverlay). Autoloaded as
+## "QuizEngine".
 ##
-## The game reads the quiz files from disk next to the game, and does NOT
+## The game reads local quiz files from disk next to the game, and does NOT
 ## bundle them into the exported .pck. This lets a player swap, edit, or add
 ## quiz files without a rebuild of the game. See get_external_data_dir() for
 ## how the game finds the directory. The game pools all questions from all
 ## files together and shuffles them into random order.
 ##
-## Expected shape per file: {"response_code": 0, "results": [{"question",
+## Expected shape per local file: {"response_code": 0, "results": [{"question",
 ## "correct_answer","incorrect_answers":[...],"difficulty",...}, ...]}
 ## See data/music-opentdb.json for an example, or fetch a fresh set from
 ## https://opentdb.com/api_config.php. On load, the game shuffles correct and
 ## incorrect answers into the 4 color slots. "boolean" (true/false) questions
 ## only fill 2 of the 4 color slots. The game leaves the rest blank.
+##
+## load_remote_quiz() accepts a live opentdb.com fetch, in the same shape as
+## local files. load_trivia_api_quiz() accepts a live the-trivia-api.com
+## fetch instead (see the-trivia-api-openapi.json), a plain array of
+## question objects with no HTML entities. the-trivia-api.com has no fixed,
+## documented category list, so QuizSourceOverlay fetches the live set of
+## category slugs from its /v2/metadata endpoint.
 
 const COLOR_KEYS: Array[String] = ["blue", "orange", "green", "yellow"]
 const DIFFICULTY_POINTS := {"easy": 100, "medium": 150, "hard": 200}
@@ -120,6 +128,16 @@ func load_remote_quiz(payload: Dictionary, quiz_title: String) -> Dictionary:
 	var normalized := _normalize_opentdb(payload)
 	return _finalize_quiz(
 		normalized.questions, normalized.quizTitle, "from opentdb.com (%s)" % quiz_title
+	)
+
+
+## Loads a quiz from a the-trivia-api.com API payload already fetched over
+## the network (see QuizSourceOverlay). The payload is a plain array of
+## question objects, not wrapped in an object like opentdb.com's response.
+func load_trivia_api_quiz(payload: Array, quiz_title: String) -> Dictionary:
+	var out_questions := _normalize_trivia_api(payload)
+	return _finalize_quiz(
+		out_questions, quiz_title, "from the-trivia-api.com (%s)" % quiz_title
 	)
 
 
@@ -277,6 +295,59 @@ func _normalize_opentdb(data: Dictionary) -> Dictionary:
 		"quizTitle": data.get("quizTitle", "Quiz"),
 		"questions": out_questions,
 	}
+
+
+## Converts a the-trivia-api.com question array into the native question
+## format of the game. Unlike opentdb.com, the-trivia-api.com does not use
+## HTML entities, and each question already names its own category slug,
+## which this function turns into a display name with
+## trivia_api_category_display_name().
+func _normalize_trivia_api(results: Array) -> Array:
+	var out_questions: Array = []
+
+	for i in range(results.size()):
+		var r: Dictionary = results[i]
+
+		var pool: Array = [
+			{"text": String(r.get("correctAnswer", "")), "correct": true}
+		]
+		for incorrect in r.get("incorrectAnswers", []):
+			pool.append({"text": String(incorrect), "correct": false})
+		pool.shuffle()
+
+		var answers := {}
+		var correct_color := ""
+		for j in range(COLOR_KEYS.size()):
+			var color: String = COLOR_KEYS[j]
+			if j < pool.size():
+				answers[color] = pool[j].text
+				if pool[j].correct:
+					correct_color = color
+			else:
+				answers[color] = ""
+
+		var category_slug: String = String(r.get("category", ""))
+		var question_text: Dictionary = r.get("question", {})
+
+		out_questions.append({
+			"id": i + 1,
+			"question": String(question_text.get("text", "")),
+			"category": trivia_api_category_display_name(category_slug),
+			"answers": answers,
+			"correct": correct_color,
+			"points": DIFFICULTY_POINTS.get(r.get("difficulty", ""), 100),
+		})
+
+	return out_questions
+
+
+## the-trivia-api.com's /v2/metadata endpoint lists category slugs only, with
+## no display name, so this turns a slug like "film_and_tv" into title case
+## with "&" for "and" ("Film & Tv"). QuizSourceOverlay uses this for its
+## category picker rows, and _normalize_trivia_api() uses it for the
+## in-game category badge, so both show the same name for a given slug.
+func trivia_api_category_display_name(slug: String) -> String:
+	return slug.capitalize().replace(" And ", " & ")
 
 
 func _build_entity_table() -> void:
