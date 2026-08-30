@@ -1,18 +1,25 @@
 extends Control
 class_name QuizSourceOverlay
 ## Lets a player pick the quiz source: local files, or a category fetched
-## live from opentdb.com. Any player, any controller, matching the rest of
-## the lobby. Navigation: Blue/Green move the cursor, Orange/Yellow adjust
-## the question amount, Red confirms the highlighted row. "Back" is just the
-## top row of the category list, so no separate cancel gesture is needed on
-## a controller (ESC also works, for keyboard testing).
+## live from opentdb.com or the-trivia-api.com. Any player, any controller,
+## matching the rest of the lobby. Navigation: Blue/Green move the cursor,
+## Orange/Yellow adjust the question amount, Red confirms the highlighted
+## row. "Back" is just the top row of the category list, so no separate
+## cancel gesture is needed on a controller (ESC also works, for keyboard
+## testing).
+##
+## Both opentdb.com and the-trivia-api.com list their categories live over
+## the network: opentdb.com via api_category.php, the-trivia-api.com via its
+## /v2/metadata endpoint (its category slugs are not otherwise documented).
 
 signal closed(new_state: Dictionary)
 
 enum Mode { SOURCE_SELECT, CATEGORY_SELECT }
 
-const CATEGORY_API_URL := "https://opentdb.com/api_category.php"
-const QUESTIONS_API_URL := "https://opentdb.com/api.php"
+const OPENTDB_CATEGORY_URL := "https://opentdb.com/api_category.php"
+const OPENTDB_QUESTIONS_URL := "https://opentdb.com/api.php"
+const TRIVIA_API_METADATA_URL := "https://the-trivia-api.com/v2/metadata"
+const TRIVIA_API_QUESTIONS_URL := "https://the-trivia-api.com/v2/questions"
 const AMOUNT_MIN := 5
 const AMOUNT_MAX := 50
 const AMOUNT_STEP := 5
@@ -32,13 +39,16 @@ const ANY_CATEGORY_ID := -1
 @onready var questions_request: HTTPRequest = %QuestionsRequest
 
 var _mode: int = Mode.SOURCE_SELECT
+var _provider: String = ""
 var _cursor: int = 0
 var _amount: int = AMOUNT_DEFAULT
-var _categories: Array = []
+var _opentdb_categories: Array = []
+var _trivia_api_categories: Array = []
 var _category_rows: Array = []
 var _row_labels: Array[Label] = []
 var _fetching := false
-var _cooldown_until_msec: int = 0
+var _opentdb_cooldown_until_msec: int = 0
+var _trivia_api_cooldown_until_msec: int = 0
 var _saved_state: Dictionary = {}
 
 
@@ -80,15 +90,22 @@ func open(saved_state: Dictionary = {}) -> void:
 
 func _show_source_select() -> void:
 	_mode = Mode.SOURCE_SELECT
+	_provider = ""
 	title_label.text = "QUIZ SOURCE"
 	amount_row.visible = false
 	status_label.text = ""
 
 	_category_rows = [
 		{"id": "local", "name": "LOCAL FILES"},
-		{"id": "online", "name": "ONLINE (opentdb.com)"},
+		{"id": "opentdb", "name": "OPENTDB.COM"},
+		{"id": "trivia_api", "name": "THE TRIVIA API"},
 	]
-	_cursor = 1 if _saved_state.get("mode", "local") == "online" else 0
+	var saved_mode: String = String(_saved_state.get("mode", "local"))
+	_cursor = 0
+	for i in range(_category_rows.size()):
+		if _category_rows[i].id == saved_mode:
+			_cursor = i
+			break
 	_rebuild_rows()
 
 
@@ -98,11 +115,27 @@ func _show_category_select() -> void:
 	amount_row.visible = true
 	_update_amount_label()
 
-	if _categories.is_empty():
-		_fetch_categories()
+	if _provider == "trivia_api":
+		if _trivia_api_categories.is_empty():
+			# Clears the still-visible previous rows immediately, instead of
+			# leaving them on screen (and confirmable) until the fetch below
+			# completes.
+			_category_rows = []
+			_rebuild_rows()
+			_fetch_trivia_api_categories()
+			return
+		_populate_category_rows(_trivia_api_categories)
 		return
 
-	_populate_category_rows()
+	if _opentdb_categories.is_empty():
+		# Clears the still-visible previous rows immediately, instead of
+		# leaving them on screen (and confirmable) until the fetch below
+		# completes.
+		_category_rows = []
+		_rebuild_rows()
+		_fetch_opentdb_categories()
+		return
+	_populate_category_rows(_opentdb_categories)
 
 
 func _on_button_pressed(_player: String, color: String) -> void:
@@ -151,26 +184,35 @@ func _confirm_cursor() -> void:
 			QuizEngine.load_quiz()
 			_close({"mode": "local", "amount": _amount})
 		else:
+			_provider = String(row.id)
 			_show_category_select()
 		return
 
-	if row.id == BACK_ID:
+	# typeof() must run first: GDScript's == errors on mismatched types
+	# instead of just returning false, and a the-trivia-api.com category id
+	# is a String, not an int like BACK_ID.
+	if typeof(row.id) == TYPE_INT and row.id == BACK_ID:
 		_show_source_select()
 	else:
 		_fetch_questions(row)
 
 
-func _populate_category_rows() -> void:
+func _populate_category_rows(categories: Array) -> void:
 	_category_rows = [
 		{"id": BACK_ID, "name": "← BACK"},
 		{"id": ANY_CATEGORY_ID, "name": "ANY CATEGORY"},
 	]
-	_category_rows.append_array(_categories)
+	_category_rows.append_array(categories)
 
-	var saved_id: int = int(_saved_state.get("category_id", ANY_CATEGORY_ID))
+	# typeof() must run first: GDScript's == errors on mismatched types
+	# instead of just returning false. saved_id can be a leftover the-trivia-
+	# api.com String slug while these rows are opentdb.com's int ids, or the
+	# reverse.
+	var saved_id = _saved_state.get("category_id", ANY_CATEGORY_ID)
 	_cursor = 0
 	for i in range(_category_rows.size()):
-		if int(_category_rows[i].id) == saved_id:
+		var row_id = _category_rows[i].id
+		if typeof(row_id) == typeof(saved_id) and row_id == saved_id:
 			_cursor = i
 			break
 
@@ -201,16 +243,36 @@ func _update_row_highlight() -> void:
 		scroll_container.ensure_control_visible(_row_labels[_cursor])
 
 
-func _fetch_categories() -> void:
+func _fetch_opentdb_categories() -> void:
+	# Locks button input (see _on_button_pressed) until the fetch completes,
+	# the same as a question fetch. Without this, a player could switch to
+	# a different row, or a different provider, while this fetch is still in
+	# flight, and confirm a row that no longer matches what this fetch will
+	# return.
+	_fetching = true
 	status_label.text = "Loading categories..."
-	var err := category_request.request(CATEGORY_API_URL)
+	var err := category_request.request(OPENTDB_CATEGORY_URL)
 	if err != OK:
+		_fetching = false
 		status_label.text = "Could not reach opentdb.com."
+
+
+func _fetch_trivia_api_categories() -> void:
+	# Same input lock as _fetch_opentdb_categories() above, and for the same
+	# reason.
+	_fetching = true
+	status_label.text = "Loading categories..."
+	var err := category_request.request(TRIVIA_API_METADATA_URL)
+	if err != OK:
+		_fetching = false
+		status_label.text = "Could not reach the-trivia-api.com."
 
 
 func _on_category_request_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
+	_fetching = false
+
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		status_label.text = "Network error. Press 🔴 on BACK and try again."
 		_category_rows = [{"id": BACK_ID, "name": "← BACK"}]
@@ -219,6 +281,27 @@ func _on_category_request_completed(
 		return
 
 	var parsed = JSON.parse_string(body.get_string_from_utf8())
+
+	if _provider == "trivia_api":
+		if typeof(parsed) != TYPE_DICTIONARY or not parsed.has("byCategory"):
+			status_label.text = "Unexpected response from the-trivia-api.com."
+			_category_rows = [{"id": BACK_ID, "name": "← BACK"}]
+			_cursor = 0
+			_rebuild_rows()
+			return
+
+		var slugs: Array = parsed.byCategory.keys()
+		slugs.sort()
+		_trivia_api_categories = []
+		for slug in slugs:
+			_trivia_api_categories.append(
+				{"id": String(slug), "name": QuizEngine.trivia_api_category_display_name(String(slug))}
+			)
+
+		status_label.text = ""
+		_populate_category_rows(_trivia_api_categories)
+		return
+
 	if typeof(parsed) != TYPE_DICTIONARY or not parsed.has("trivia_categories"):
 		status_label.text = "Unexpected response from opentdb.com."
 		_category_rows = [{"id": BACK_ID, "name": "← BACK"}]
@@ -226,61 +309,87 @@ func _on_category_request_completed(
 		_rebuild_rows()
 		return
 
-	_categories = []
+	_opentdb_categories = []
 	for c in parsed.trivia_categories:
-		_categories.append({"id": int(c.id), "name": String(c.name)})
+		_opentdb_categories.append({"id": int(c.id), "name": String(c.name)})
 
 	status_label.text = ""
-	_populate_category_rows()
+	_populate_category_rows(_opentdb_categories)
 
 
 func _fetch_questions(row: Dictionary) -> void:
-	if Time.get_ticks_msec() < _cooldown_until_msec:
+	var cooldown_until: int = (
+		_trivia_api_cooldown_until_msec if _provider == "trivia_api" else _opentdb_cooldown_until_msec
+	)
+	if Time.get_ticks_msec() < cooldown_until:
 		status_label.text = "Please wait a moment before fetching again."
 		return
 
 	_fetching = true
 	status_label.text = "Fetching questions..."
 
-	var url := "%s?amount=%d" % [QUESTIONS_API_URL, _amount]
-	if int(row.id) != ANY_CATEGORY_ID:
-		url += "&category=%d" % int(row.id)
+	var url: String
+	if _provider == "trivia_api":
+		url = "%s?limit=%d&types=text_choice" % [TRIVIA_API_QUESTIONS_URL, _amount]
+		# typeof() must run first: GDScript's == errors on mismatched types
+		# instead of just returning false, and a real category id here is a
+		# String, not an int like ANY_CATEGORY_ID.
+		var is_any_category: bool = typeof(row.id) == TYPE_INT and row.id == ANY_CATEGORY_ID
+		if not is_any_category:
+			url += "&categories=%s" % String(row.id)
+	else:
+		url = "%s?amount=%d" % [OPENTDB_QUESTIONS_URL, _amount]
+		if int(row.id) != ANY_CATEGORY_ID:
+			url += "&category=%d" % int(row.id)
 
 	var err := questions_request.request(url)
 	if err != OK:
 		_fetching = false
-		status_label.text = "Could not reach opentdb.com."
+		status_label.text = "Could not reach the quiz server."
 
 
 func _on_questions_request_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
 	_fetching = false
-	_cooldown_until_msec = Time.get_ticks_msec() + int(FETCH_COOLDOWN_SEC * 1000)
+	var cooldown_until := Time.get_ticks_msec() + int(FETCH_COOLDOWN_SEC * 1000)
+	if _provider == "trivia_api":
+		_trivia_api_cooldown_until_msec = cooldown_until
+	else:
+		_opentdb_cooldown_until_msec = cooldown_until
 
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		status_label.text = "Network error. Try again in a few seconds."
 		return
 
 	var parsed = JSON.parse_string(body.get_string_from_utf8())
-	if typeof(parsed) != TYPE_DICTIONARY:
-		status_label.text = "Unexpected response from opentdb.com."
-		return
-
-	var code: int = int(parsed.get("response_code", -1))
-	if code == 5:
-		status_label.text = "Too many requests. Wait a few seconds and try again."
-		return
-	if code != 0:
-		status_label.text = "No questions available for that category. Try another."
-		return
-
 	var category_row: Dictionary = _category_rows[_cursor]
 	var category_name: String = String(category_row.name)
-	QuizEngine.load_remote_quiz(parsed, category_name)
+
+	if _provider == "trivia_api":
+		if typeof(parsed) != TYPE_ARRAY:
+			status_label.text = "Unexpected response from the-trivia-api.com."
+			return
+		if parsed.is_empty():
+			status_label.text = "No questions available for that category. Try another."
+			return
+		QuizEngine.load_trivia_api_quiz(parsed, category_name)
+	else:
+		if typeof(parsed) != TYPE_DICTIONARY:
+			status_label.text = "Unexpected response from opentdb.com."
+			return
+		var code: int = int(parsed.get("response_code", -1))
+		if code == 5:
+			status_label.text = "Too many requests. Wait a few seconds and try again."
+			return
+		if code != 0:
+			status_label.text = "No questions available for that category. Try another."
+			return
+		QuizEngine.load_remote_quiz(parsed, category_name)
+
 	_close({
-		"mode": "online",
-		"category_id": int(category_row.id),
+		"mode": _provider,
+		"category_id": category_row.id,
 		"category_name": category_name,
 		"amount": _amount,
 	})
