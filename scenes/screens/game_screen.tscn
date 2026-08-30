@@ -109,7 +109,7 @@ text = "QUESTION 01/10"
 horizontal_alignment = 1
 
 [node name="QuestionBox" type="PanelContainer" parent="Margin/Layout" unique_id=1906329239]
-custom_minimum_size = Vector2(900, 0)
+custom_minimum_size = Vector2(1280, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_question_box")
@@ -125,6 +125,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="AnswersGrid" type="VBoxContainer" parent="Margin/Layout" unique_id=2132248792]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 size_flags_horizontal = 4

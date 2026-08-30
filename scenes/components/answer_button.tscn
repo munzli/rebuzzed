@@ -4,7 +4,11 @@
 
 [node name="AnswerButton" type="Button"]
 custom_minimum_size = Vector2(600, 80)
+mouse_filter = 2
+focus_mode = 0
 text = ""
+text_overrun_behavior = 0
+autowrap_mode = 2
 script = ExtResource("1")
 
 [node name="IndicatorRow" type="HBoxContainer" parent="."]

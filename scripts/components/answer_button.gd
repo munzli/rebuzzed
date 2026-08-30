@@ -2,8 +2,6 @@ extends Button
 class_name AnswerButton
 ## One of the 4 colored answer buttons.
 
-signal answer_clicked(color: String)
-
 const COLOR_HEX := {
 	"blue": Color("1976d2"),
 	"orange": Color("ff9800"),
@@ -19,6 +17,10 @@ const PLAYER_COLORS := {
 	"player4": Color("ffcc32"),
 }
 
+## Breathing room around the button's (possibly wrapped) text, on each side.
+const TEXT_PADDING_HORIZONTAL := 24.0
+const TEXT_PADDING_VERTICAL := 10.0
+
 @export var color_name: String = "blue"
 
 var answer_text: String = "":
@@ -32,7 +34,6 @@ var answer_text: String = "":
 func _ready() -> void:
 	_apply_color_style()
 	_update_label()
-	pressed.connect(func(): answer_clicked.emit(color_name))
 
 
 ## Resets the button to the default, pre-reveal appearance, and clears
@@ -56,9 +57,26 @@ func set_reveal_state(is_correct_answer: bool) -> void:
 		style.set_corner_radius_all(4)
 		style.set_border_width_all(4)
 		style.border_color = Color.WHITE
+		_apply_text_padding(style)
 		add_theme_stylebox_override("normal", style)
 	else:
 		self_modulate = Color(1, 1, 1, 0.35)
+
+
+## Returns true if answer_text fits on one line within available_width,
+## measured with this button's own font, font size, and text padding.
+## GameScreen uses this to decide whether the answer column needs to widen,
+## instead of always using the full question width.
+func fits_without_wrap(available_width: float) -> bool:
+	if answer_text == "":
+		return true
+
+	var font: Font = get_theme_font("font")
+	var font_size: int = get_theme_font_size("font_size")
+	var text_width: float = font.get_string_size(
+		answer_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size
+	).x
+	return text_width <= available_width - TEXT_PADDING_HORIZONTAL * 2
 
 
 func clear_indicators() -> void:
@@ -101,19 +119,19 @@ func _apply_color_style() -> void:
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = base
 	normal.set_corner_radius_all(4)
+	_apply_text_padding(normal)
 	add_theme_stylebox_override("normal", normal)
 
-	var hover := normal.duplicate()
-	hover.bg_color = base.lightened(0.15)
-	add_theme_stylebox_override("hover", hover)
-
-	var pressed_style := normal.duplicate()
-	pressed_style.bg_color = base.darkened(0.15)
-	add_theme_stylebox_override("pressed", pressed_style)
-
 	add_theme_color_override("font_color", Color.WHITE)
-	add_theme_color_override("font_hover_color", Color.WHITE)
-	add_theme_color_override("font_pressed_color", Color.WHITE)
+
+
+## Adds breathing room around the button's (possibly wrapped) text, so a
+## long answer does not touch the button's edges.
+func _apply_text_padding(style: StyleBoxFlat) -> void:
+	style.content_margin_left = TEXT_PADDING_HORIZONTAL
+	style.content_margin_right = TEXT_PADDING_HORIZONTAL
+	style.content_margin_top = TEXT_PADDING_VERTICAL
+	style.content_margin_bottom = TEXT_PADDING_VERTICAL
 
 
 func _update_label() -> void:
