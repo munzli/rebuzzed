@@ -9,6 +9,11 @@ const PLAYER_KEYS: Array[String] = ["player1", "player2", "player3", "player4"]
 const REVEAL_DELAY := 4.0
 const COUNTDOWN_DURATION := 3.0
 
+## Matches AnswersGrid's custom_minimum_size.x in game_screen.tscn: the
+## compact, centered width the answer column uses when no answer needs to
+## wrap onto more than one line.
+const COMPACT_ANSWERS_WIDTH := 700.0
+
 @onready var score_boxes: Dictionary = {
 	"player1": %ScoreBoxP1,
 	"player2": %ScoreBoxP2,
@@ -21,6 +26,7 @@ const COUNTDOWN_DURATION := 3.0
 	"green": %AnswerGreen,
 	"yellow": %AnswerYellow,
 }
+@onready var answers_grid: VBoxContainer = %AnswersGrid
 @onready var category_badge: Label = %CategoryBadge
 @onready var question_badge: Label = %QuestionBadge
 @onready var question_text: Label = %QuestionText
@@ -41,8 +47,6 @@ func _ready() -> void:
 	InputManager.button_pressed.connect(_on_button_pressed)
 	GameState.timer_updated.connect(_on_timer_updated)
 	GameState.time_expired.connect(_on_time_expired)
-	for color in answer_buttons.keys():
-		(answer_buttons[color] as AnswerButton).answer_clicked.connect(_on_answer_button_clicked)
 	countdown_overlay.visible = false
 
 	quit_confirm_overlay.visible = false
@@ -143,6 +147,7 @@ func _display_question(question) -> void:
 	if question == null:
 		return
 
+	var needs_wide_answers := false
 	for color in answer_buttons.keys():
 		var btn: AnswerButton = answer_buttons[color]
 		btn.reset()
@@ -150,6 +155,13 @@ func _display_question(question) -> void:
 		btn.answer_text = answer_text
 		# opentdb "boolean" questions only fill 2 of the 4 color slots.
 		btn.visible = answer_text != ""
+		if btn.visible and not btn.fits_without_wrap(COMPACT_ANSWERS_WIDTH):
+			needs_wide_answers = true
+
+	# Stays at its compact, centered width unless an answer actually needs
+	# to wrap onto more than one line, instead of always matching the full
+	# width of the question box above it.
+	answers_grid.size_flags_horizontal = SIZE_EXPAND_FILL if needs_wide_answers else SIZE_SHRINK_CENTER
 
 	question_text.text = question.question
 	var category: String = question.get("category", "")
@@ -195,11 +207,6 @@ func _on_button_pressed(player: String, color: String) -> void:
 		var p: Dictionary = GameState.players.get(player, {})
 		if p.get("joined", false) and p.get("selection", "") != "":
 			_lock_in(player)
-
-
-func _on_answer_button_clicked(color: String) -> void:
-	# Mouse clicks always act as player 1.
-	_select_answer("player1", color)
 
 
 func _select_answer(player: String, color: String) -> void:
