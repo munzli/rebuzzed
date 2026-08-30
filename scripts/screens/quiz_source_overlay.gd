@@ -186,6 +186,7 @@ func _rebuild_rows() -> void:
 		var label := Label.new()
 		label.text = row.name
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.add_theme_font_size_override("font_size", 32)
 		rows_container.add_child(label)
 		_row_labels.append(label)
 

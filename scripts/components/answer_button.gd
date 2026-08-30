@@ -89,6 +89,7 @@ func add_indicator(player_key: String, display_name: String, locked_in: bool) ->
 	label.add_theme_color_override("font_color", Color.WHITE)
 	label.add_theme_color_override("font_outline_color", Color.BLACK)
 	label.add_theme_constant_override("outline_size", 3)
+	label.add_theme_font_size_override("font_size", 32)
 	badge.add_child(label)
 
 	indicator_row.add_child(badge)

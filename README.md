@@ -136,7 +136,7 @@ or any local quiz file, without a rebuild of the game.
 rebuzzed/
 ├── project.godot
 ├── data/                     # External, user-editable: quiz JSON files + saved settings
-├── assets/fonts/             # Press Start 2P + bundled color-emoji fallback
+├── assets/fonts/             # Windows Command Prompt + bundled color-emoji fallback
 ├── scenes/
 │   ├── main.tscn             # Root: swaps between lobby/game/game-over
 │   ├── screens/              # Lobby, gameplay, game-over screens
@@ -172,9 +172,9 @@ The project maintainers used generative AI tools during development.
 Rebuzzed licenses its code under the [GNU GPL v3.0](LICENSE).
 
 Bundled fonts keep their own licenses, not GPL:
-[Press Start 2P](assets/fonts/PressStart2P-OFL.txt) and
-[Noto Color Emoji](assets/fonts/NotoColorEmoji-OFL.txt) both come from the
-Google Noto and Press Start 2P projects, under the SIL Open Font License
-1.1. Noto Color Emoji also offers a dual
-OFL-1.1/[Apache-2.0](assets/fonts/NotoColorEmoji-LICENSE-Apache-2.0.txt)
+[Windows Command Prompt](assets/fonts/WindowsCommandPrompt-LICENSE.txt), by
+McFood, is under a Creative Commons Attribution-ShareAlike 3.0 license.
+[Noto Color Emoji](assets/fonts/NotoColorEmoji-OFL.txt) is from the
+Google Noto project, under the SIL Open Font License 1.1, and also offers a
+dual OFL-1.1/[Apache-2.0](assets/fonts/NotoColorEmoji-LICENSE-Apache-2.0.txt)
 license.

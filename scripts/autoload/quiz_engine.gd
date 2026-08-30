@@ -45,7 +45,7 @@ const _LATIN1_ENTITY_NAMES: Array[String] = [
 const _EXTRA_ENTITIES := {
 	"&quot;": "\"", "&apos;": "'", "&lt;": "<", "&gt;": ">",
 	"&hellip;": "…", "&rsquo;": "’", "&lsquo;": "‘", "&rdquo;": "”", "&ldquo;": "“",
-	"&ndash;": "–", "&mdash;": "—", "&trade;": "™",
+	"&ndash;": "–", "&mdash;": "—", "&trade;": "™", "&pi;": "π", "&Delta;": "Δ",
 }
 
 var quiz: Dictionary = {}
@@ -267,13 +267,14 @@ func _normalize_opentdb(data: Dictionary) -> Dictionary:
 		out_questions.append({
 			"id": i + 1,
 			"question": _decode_html_entities(String(r.get("question", ""))),
+			"category": _decode_html_entities(String(r.get("category", ""))),
 			"answers": answers,
 			"correct": correct_color,
 			"points": DIFFICULTY_POINTS.get(r.get("difficulty", ""), 100),
 		})
 
 	return {
-		"quizTitle": data.get("quizTitle", "OpenTDB Quiz"),
+		"quizTitle": data.get("quizTitle", "Quiz"),
 		"questions": out_questions,
 	}
 

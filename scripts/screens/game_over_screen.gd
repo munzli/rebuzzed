@@ -6,11 +6,9 @@ signal restart_requested()
 const RANK_ICON_SIZE := Vector2(60, 56)
 
 @onready var final_scores_list: VBoxContainer = %FinalScoresList
-@onready var play_again_btn: Button = %PlayAgainBtn
 
 
 func _ready() -> void:
-	play_again_btn.pressed.connect(func(): restart_requested.emit())
 	InputManager.button_pressed.connect(_on_button_pressed)
 
 
@@ -49,25 +47,25 @@ func _build_score_row(
 	rank_label.custom_minimum_size = RANK_ICON_SIZE
 	rank_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rank_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	# Medal emoji (top 3) need a bigger size than the "#4" text fallback, to
-	# look right next to the pixel font. The bundled color emoji font draws
-	# glyphs with a lot of internal padding relative to their advance width.
-	rank_label.add_theme_font_size_override("font_size", 32 if rank_index < 3 else 20)
+	rank_label.add_theme_font_size_override("font_size", 40)
 	row.add_child(rank_label)
 
 	var name_label := Label.new()
 	name_label.text = display_name
 	name_label.custom_minimum_size = Vector2(220, 0)
+	name_label.add_theme_font_size_override("font_size", 32)
 	row.add_child(name_label)
 
 	var score_label := Label.new()
 	score_label.text = _format_number(int(player.score))
 	score_label.custom_minimum_size = Vector2(100, 0)
+	score_label.add_theme_font_size_override("font_size", 32)
 	row.add_child(score_label)
 
 	var correct_label := Label.new()
 	correct_label.text = "%d/%d ✔️" % [correct_count, total_questions]
 	correct_label.add_theme_color_override("font_color", Color(1, 1, 1, 0.6))
+	correct_label.add_theme_font_size_override("font_size", 32)
 	row.add_child(correct_label)
 
 	return row

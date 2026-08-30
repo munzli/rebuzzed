@@ -8,23 +8,14 @@ const REQUIRED_SEQUENCE: Array[String] = ["blue", "orange", "green", "yellow"]
 const SEQUENCE_TIMEOUT := 2.0
 const COLOR_ICONS := {"blue": "🟦", "orange": "🟧", "green": "🟩", "yellow": "🟨"}
 
-## The bundled color emoji font draws its glyphs with a lot of internal
-## padding relative to their advance width. At the same nominal font size,
-## these glyphs look much smaller than the blocky glyphs of PressStart2P.
-## These icon sizes are boosted well above SEQUENCE_ICON_FONT_SIZE (used for
-## the plain-text "TO START:" and arrow labels) to compensate.
-const SEQUENCE_ICON_FONT_SIZE := 20
-const SEQUENCE_ICON_EMOJI_FONT_SIZE := 26
-const SEQUENCE_ICON_EMOJI_PRESSED_FONT_SIZE := 48
+## Icon size for the Blue -> Orange -> Green -> Yellow start sequence.
+## Icons already pressed use SEQUENCE_ICON_PRESSED_FONT_SIZE, to show
+## progress through the sequence.
+const SEQUENCE_ICON_FONT_SIZE := 40
+const SEQUENCE_ICON_PRESSED_FONT_SIZE := 60
 const SEQUENCE_ICON_SLOT_SIZE := Vector2(56, 56)
 
-## Color emoji glyphs sit lower within their line box than the glyphs of the
-## pixel font. As a result, every emoji Label gets nudged up by this many
-## pixels (see _make_emoji_icon()).
-const EMOJI_Y_NUDGE := -6.0
-
-const KEYBOARD_HELP_FONT_SIZE := 14
-const KEYBOARD_HELP_EMOJI_FONT_SIZE := 22
+const KEYBOARD_HELP_FONT_SIZE := 28
 const KEYBOARD_HELP_EMOJI_SLOT_SIZE := Vector2(32, 32)
 
 ## Primary key per player action, mirroring InputManager.KEYBOARD_MAP
@@ -58,7 +49,6 @@ const KEYBOARD_HELP := [
 @onready var quiz_status_label: Label = %QuizStatusLabel
 @onready var quiz_source_overlay: QuizSourceOverlay = %QuizSourceOverlay
 @onready var sequence_row: HBoxContainer = %SequenceRow
-@onready var hint_label: Label = %HintLabel
 @onready var keyboard_grid: GridContainer = %KeyboardGrid
 @onready var keyboard_help_panel: PanelContainer = %Panel
 
@@ -171,16 +161,15 @@ func _build_sequence_row() -> void:
 			sequence_row.add_child(arrow)
 
 		var icon_text: String = COLOR_ICONS[REQUIRED_SEQUENCE[i]]
-		var built := _make_emoji_icon(icon_text, SEQUENCE_ICON_EMOJI_FONT_SIZE, SEQUENCE_ICON_SLOT_SIZE)
+		var built := _make_emoji_icon(icon_text, SEQUENCE_ICON_FONT_SIZE, SEQUENCE_ICON_SLOT_SIZE)
 		sequence_row.add_child(built.wrapper)
 		_sequence_icon_labels.append(built.label)
 
 
 ## Builds an emoji Label wrapped in a plain (non-Container) Control, so a
-## fixed pixel nudge survives the layout passes of the outer Container. A
-## Container can otherwise reset any position offset applied directly to a
-## direct child every time it re-sorts, for example when the font size of a
-## sibling changes.
+## fixed-size slot survives the layout passes of the outer Container. A
+## Container can otherwise resize a direct child every time it re-sorts, for
+## example when the font size of a sibling changes.
 func _make_emoji_icon(
 	text: String, font_size: int, slot_size: Vector2 = Vector2.ZERO
 ) -> Dictionary:
@@ -194,8 +183,6 @@ func _make_emoji_icon(
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", font_size)
 	label.set_anchors_preset(Control.PRESET_FULL_RECT)
-	label.offset_top += EMOJI_Y_NUDGE
-	label.offset_bottom += EMOJI_Y_NUDGE
 	wrapper.add_child(label)
 
 	return {"wrapper": wrapper, "label": label}
@@ -212,8 +199,7 @@ func _style_keyboard_help_panel() -> void:
 func _build_keyboard_help() -> void:
 	keyboard_grid.add_child(_keyboard_help_label("", true))
 	for header in ["🔴", "🟦", "🟧", "🟩", "🟨"]:
-		var size := KEYBOARD_HELP_EMOJI_FONT_SIZE
-		var built := _make_emoji_icon(header, size, KEYBOARD_HELP_EMOJI_SLOT_SIZE)
+		var built := _make_emoji_icon(header, KEYBOARD_HELP_FONT_SIZE, KEYBOARD_HELP_EMOJI_SLOT_SIZE)
 		keyboard_grid.add_child(built.wrapper)
 
 	for row in KEYBOARD_HELP:
@@ -262,7 +248,7 @@ func _on_quiz_source_closed(new_state: Dictionary) -> void:
 
 func _update_quiz_status_label() -> void:
 	quiz_status_label.text = (
-		"Quiz: %s (%d questions)" % [QuizEngine.get_title(), QuizEngine.total_questions]
+		"%s (%d questions)" % [QuizEngine.get_title(), QuizEngine.total_questions]
 	)
 
 
@@ -313,27 +299,20 @@ func _on_sequence_timeout() -> void:
 func _update_instruction() -> void:
 	var joined_count: int = _joined.values().count(true)
 
-	# sequence_row replaces instruction_label (never shown together), and both
-	# share the same custom_minimum_size, so toggling .visible between them
-	# does not shift the rest of the lobby content.
+	# sequence_row, instruction_label, and quiz_source_hint are all children
+	# of instruction_row.
 	instruction_label.visible = joined_count == 0
+	quiz_source_hint.visible = joined_count == 0
 	sequence_row.visible = joined_count > 0
-
-	# quiz_source_hint and hint_label have no same-height replacement, so they
-	# fade instead of hiding: this keeps their reserved height in the
-	# VBoxContainer, so the lobby content still does not shift when they
-	# disappear.
-	quiz_source_hint.modulate.a = 1.0 if joined_count == 0 else 0.0
-	hint_label.modulate.a = 1.0 if joined_count == 0 else 0.0
 
 	if joined_count == 0:
 		instruction_label.text = "PRESS 🔴 TO JOIN"
 		return
 
 	for i in range(_sequence_icon_labels.size()):
-		var font_size: int = SEQUENCE_ICON_EMOJI_FONT_SIZE
+		var font_size: int = SEQUENCE_ICON_FONT_SIZE
 		if i < _start_sequence.size():
-			font_size = SEQUENCE_ICON_EMOJI_PRESSED_FONT_SIZE
+			font_size = SEQUENCE_ICON_PRESSED_FONT_SIZE
 		_sequence_icon_labels[i].add_theme_font_size_override("font_size", font_size)
 
 

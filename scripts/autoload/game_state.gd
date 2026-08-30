@@ -30,7 +30,7 @@ var settings: Dictionary = {
 
 var round_data: Dictionary = {
 	"timer_start_time": 0,
-	"timer_value": 30,
+	"timer_value": 20,
 	"correct_answer": ""
 }
 

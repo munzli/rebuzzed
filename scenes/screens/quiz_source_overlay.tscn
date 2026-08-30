@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dghcf0dpcieir"]
 
-[ext_resource type="Script" path="res://scripts/screens/quiz_source_overlay.gd" id="1"]
+[ext_resource type="Script" uid="uid://qywvn8gisfpw" path="res://scripts/screens/quiz_source_overlay.gd" id="1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 40.0
@@ -19,7 +19,7 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 anti_aliasing = false
 
-[node name="QuizSourceOverlay" type="Control"]
+[node name="QuizSourceOverlay" type="Control" unique_id=2138186735]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,7 +28,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="." unique_id=40598454]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,13 +37,13 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.85)
 
-[node name="CategoryRequest" type="HTTPRequest" parent="."]
+[node name="CategoryRequest" type="HTTPRequest" parent="." unique_id=70515304]
 unique_name_in_owner = true
 
-[node name="QuestionsRequest" type="HTTPRequest" parent="."]
+[node name="QuestionsRequest" type="HTTPRequest" parent="." unique_id=1042145599]
 unique_name_in_owner = true
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=878923441]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,56 +51,56 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="CenterContainer"]
+[node name="Panel" type="PanelContainer" parent="CenterContainer" unique_id=1079060856]
 custom_minimum_size = Vector2(560, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Content" type="VBoxContainer" parent="CenterContainer/Panel"]
+[node name="Content" type="VBoxContainer" parent="CenterContainer/Panel" unique_id=1946475501]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/Content"]
+[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/Content" unique_id=337527866]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 48
 text = "QUIZ SOURCE"
 horizontal_alignment = 1
 
-[node name="AmountRow" type="HBoxContainer" parent="CenterContainer/Panel/Content"]
+[node name="AmountRow" type="HBoxContainer" parent="CenterContainer/Panel/Content" unique_id=752082932]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 alignment = 1
 
-[node name="AmountLabel" type="Label" parent="CenterContainer/Panel/Content/AmountRow"]
+[node name="AmountLabel" type="Label" parent="CenterContainer/Panel/Content/AmountRow" unique_id=343938993]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "QUESTIONS: 15   (🟧 −5 / 🟨 +5)"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/Panel/Content"]
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/Panel/Content" unique_id=1443330608]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(480, 280)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="RowsContainer" type="VBoxContainer" parent="CenterContainer/Panel/Content/ScrollContainer"]
+[node name="RowsContainer" type="VBoxContainer" parent="CenterContainer/Panel/Content/ScrollContainer" unique_id=300096923]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="StatusLabel" type="Label" parent="CenterContainer/Panel/Content"]
+[node name="StatusLabel" type="Label" parent="CenterContainer/Panel/Content" unique_id=170078275]
 unique_name_in_owner = true
 layout_mode = 2
-autowrap_mode = 2
-text = ""
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
 
-[node name="HelpLabel" type="Label" parent="CenterContainer/Panel/Content"]
+[node name="HelpLabel" type="Label" parent="CenterContainer/Panel/Content" unique_id=774177716]
+modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 28
 text = "🟦/🟩 move   🟧/🟨 amount −/+   🔴 confirm"
 horizontal_alignment = 1
-modulate = Color(1, 1, 1, 0.6)

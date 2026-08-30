@@ -13,7 +13,7 @@ extends Node
 ## CBDT/CBLC (bitmap) color glyphs have wider support across builds. This is
 ## the font format bundled here.
 
-const MAIN_FONT_PATH := "res://assets/fonts/PressStart2P-Regular.ttf"
+const MAIN_FONT_PATH := "res://assets/fonts/WindowsCommandPrompt.ttf"
 const EMOJI_FALLBACK_PATH := "res://assets/fonts/NotoColorEmoji.ttf"
 
 

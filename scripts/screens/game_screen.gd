@@ -82,7 +82,6 @@ func start_game(names: Dictionary) -> void:
 	stats = {"total_questions": QuizEngine.total_questions, "player_correct": {}}
 	_revealing = false
 
-	category_badge.text = QuizEngine.get_title().to_upper()
 	_update_hud()
 	_display_question(QuizEngine.get_current_question())
 	_update_progress()
@@ -153,6 +152,8 @@ func _display_question(question) -> void:
 		btn.visible = answer_text != ""
 
 	question_text.text = question.question
+	var category: String = question.get("category", "")
+	category_badge.text = (category if category != "" else QuizEngine.get_title()).to_upper()
 	_reset_player_statuses()
 
 

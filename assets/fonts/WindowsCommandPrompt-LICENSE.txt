@@ -1,0 +1,11 @@
+The FontStruction "Windows Command Prompt"
+(http://fontstruct.com/fontstructions/show/695225) by McFood is licensed
+under a Creative Commons Attribution-ShareAlike license
+(http://creativecommons.org/licenses/by-sa/3.0/).
+
+This license text was not bundled with the downloaded font file. It was
+reconstructed from the license strings embedded in the font's own metadata
+(readable with `strings windows_command_prompt.ttf` or a font info tool).
+
+FontStruct is a trademark of FSI FontShop International GmbH.
+http://fontstruct.com

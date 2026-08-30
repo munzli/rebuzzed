@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bdl11d16ftb2b"]
 
 [ext_resource type="Script" uid="uid://ckwqwbe6n4plh" path="res://scripts/screens/lobby_screen.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/screens/quiz_source_overlay.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://dghcf0dpcieir" path="res://scenes/screens/quiz_source_overlay.tscn" id="2"]
 
 [node name="LobbyScreen" type="Control" unique_id=951163763]
 layout_mode = 3
@@ -36,13 +36,13 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="Center/Content" unique_id=662511261]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 96
 text = "🎮 REBUZZED 🎮"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="Center/Content" unique_id=1293377879]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 48
 text = "QUIZ CHALLENGE"
 horizontal_alignment = 1
 
@@ -50,8 +50,8 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "Quiz: —"
+theme_override_font_sizes/font_size = 30
+text = "—"
 horizontal_alignment = 1
 
 [node name="PlayerSlots" type="HBoxContainer" parent="Center/Content" unique_id=1817753782]
@@ -69,13 +69,14 @@ layout_mode = 2
 
 [node name="SlotNumber" type="Label" parent="Center/Content/PlayerSlots/SlotPanelP1/VBoxContainer" unique_id=374349217]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 48
 text = "P1"
 horizontal_alignment = 1
 
 [node name="NameInputP1" type="LineEdit" parent="Center/Content/PlayerSlots/SlotPanelP1/VBoxContainer" unique_id=2057654171]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 placeholder_text = "Player 1"
 alignment = 1
 max_length = 12
@@ -84,10 +85,10 @@ max_length = 12
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Press 🔴 to join"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
 
 [node name="SlotPanelP2" type="PanelContainer" parent="Center/Content/PlayerSlots" unique_id=242579610]
 unique_name_in_owner = true
@@ -99,13 +100,14 @@ layout_mode = 2
 
 [node name="SlotNumber" type="Label" parent="Center/Content/PlayerSlots/SlotPanelP2/VBoxContainer" unique_id=1564616719]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 48
 text = "P2"
 horizontal_alignment = 1
 
 [node name="NameInputP2" type="LineEdit" parent="Center/Content/PlayerSlots/SlotPanelP2/VBoxContainer" unique_id=1421474903]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 placeholder_text = "Player 2"
 alignment = 1
 max_length = 12
@@ -114,10 +116,10 @@ max_length = 12
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Press 🔴 to join"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
 
 [node name="SlotPanelP3" type="PanelContainer" parent="Center/Content/PlayerSlots" unique_id=1818743261]
 unique_name_in_owner = true
@@ -129,13 +131,14 @@ layout_mode = 2
 
 [node name="SlotNumber" type="Label" parent="Center/Content/PlayerSlots/SlotPanelP3/VBoxContainer" unique_id=924102518]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 48
 text = "P3"
 horizontal_alignment = 1
 
 [node name="NameInputP3" type="LineEdit" parent="Center/Content/PlayerSlots/SlotPanelP3/VBoxContainer" unique_id=57743333]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 placeholder_text = "Player 3"
 alignment = 1
 max_length = 12
@@ -144,10 +147,10 @@ max_length = 12
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Press 🔴 to join"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
 
 [node name="SlotPanelP4" type="PanelContainer" parent="Center/Content/PlayerSlots" unique_id=464207984]
 unique_name_in_owner = true
@@ -159,13 +162,14 @@ layout_mode = 2
 
 [node name="SlotNumber" type="Label" parent="Center/Content/PlayerSlots/SlotPanelP4/VBoxContainer" unique_id=1900359032]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 48
 text = "P4"
 horizontal_alignment = 1
 
 [node name="NameInputP4" type="LineEdit" parent="Center/Content/PlayerSlots/SlotPanelP4/VBoxContainer" unique_id=1771664613]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 placeholder_text = "Player 4"
 alignment = 1
 max_length = 12
@@ -174,85 +178,74 @@ max_length = 12
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Press 🔴 to join"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 2
 
-[node name="InstructionLabel" type="Label" parent="Center/Content" unique_id=2057771634]
-unique_name_in_owner = true
+[node name="InstructionRow" type="HBoxContainer" parent="Center/Content" unique_id=2057771636]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="InstructionLabel" type="Label" parent="Center/Content/InstructionRow" unique_id=2057771634]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
 text = "PRESS 🔴 TO JOIN"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuizSourceHint" type="Label" parent="Center/Content" unique_id=2057771635]
+[node name="QuizSourceHint" type="Label" parent="Center/Content/InstructionRow" unique_id=2057771635]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.6)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 40
 text = "🟨 QUIZ SOURCE"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="SequenceRow" type="HBoxContainer" parent="Center/Content" unique_id=2020724785]
+[node name="SequenceRow" type="HBoxContainer" parent="Center/Content/InstructionRow" unique_id=2020724785]
 unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="HintLabel" type="Label" parent="Center/Content" unique_id=92164455]
+[node name="Panel" type="PanelContainer" parent="." unique_id=1803295599]
 unique_name_in_owner = true
-layout_mode = 2
-text = "Then press 🟦 → 🟧 → 🟩 → 🟨 to start"
-horizontal_alignment = 1
-
-[node name="KeyboardHelpFooter" type="Control" parent="." unique_id=396931264]
 layout_mode = 1
-anchors_preset = 12
+anchors_preset = 3
+anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -120.0
-offset_bottom = -16.0
-grow_horizontal = 2
+offset_left = -320.0
+offset_top = -140.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Center" type="CenterContainer" parent="KeyboardHelpFooter" unique_id=609961720]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Panel" type="PanelContainer" parent="KeyboardHelpFooter/Center" unique_id=1803295599]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Margin" type="MarginContainer" parent="KeyboardHelpFooter/Center/Panel" unique_id=1051572958]
+[node name="Margin" type="MarginContainer" parent="Panel" unique_id=1051572958]
 layout_mode = 2
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="KeyboardHelpFooter/Center/Panel/Margin" unique_id=1192244909]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Margin" unique_id=1192244909]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="KeyboardHelpTitle" type="Label" parent="KeyboardHelpFooter/Center/Panel/Margin/VBoxContainer" unique_id=15179159]
+[node name="KeyboardHelpTitle" type="Label" parent="Panel/Margin/VBoxContainer" unique_id=15179159]
 layout_mode = 2
+theme_override_font_sizes/font_size = 28
 text = "KEYBOARD"
 horizontal_alignment = 1
 
-[node name="KeyboardGrid" type="GridContainer" parent="KeyboardHelpFooter/Center/Panel/Margin/VBoxContainer" unique_id=1452517121]
+[node name="KeyboardGrid" type="GridContainer" parent="Panel/Margin/VBoxContainer" unique_id=1452517121]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 16

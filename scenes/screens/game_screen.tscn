@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bmlqbmkqmivbt"]
 
 [ext_resource type="Script" uid="uid://cq6eohaohtnam" path="res://scripts/screens/game_screen.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/components/player_score_box.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://c1vcg0a68cw4u" path="res://scenes/components/player_score_box.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/components/answer_button.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/components/pie_timer.tscn" id="4"]
 
@@ -71,9 +71,9 @@ theme_override_constants/separation = 16
 
 [node name="CategoryBadge" type="Label" parent="Margin/Layout" unique_id=434652026]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 modulate = Color(1, 1, 1, 0.6)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "QUIZ"
 horizontal_alignment = 1
 
@@ -104,6 +104,7 @@ player_key = "player4"
 [node name="QuestionBadge" type="Label" parent="Margin/Layout" unique_id=1284264461]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "QUESTION 01/10"
 horizontal_alignment = 1
 
@@ -117,7 +118,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_question_box")
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 42
 text = "Question text goes here"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -132,20 +133,24 @@ theme_override_constants/separation = 12
 [node name="AnswerBlue" parent="Margin/Layout/AnswersGrid" unique_id=1458550298 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 42
 
 [node name="AnswerOrange" parent="Margin/Layout/AnswersGrid" unique_id=1050062595 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 42
 color_name = "orange"
 
 [node name="AnswerGreen" parent="Margin/Layout/AnswersGrid" unique_id=636094236 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 42
 color_name = "green"
 
 [node name="AnswerYellow" parent="Margin/Layout/AnswersGrid" unique_id=253060384 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 42
 color_name = "yellow"
 
 [node name="TimerFooter" type="Control" parent="." unique_id=1205775200]
@@ -190,27 +195,21 @@ custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 
 [node name="TimerIcon" type="Label" parent="TimerFooter/Center/TimerBox/Margin/TimerRow/TimerIconSlot" unique_id=2000251243]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -8.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 52
+layout_mode = 0
+offset_right = 60.0
+offset_bottom = 57.0
+theme_override_font_sizes/font_size = 48
 text = "⏱️"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="TimerValue" type="Label" parent="TimerFooter/Center/TimerBox/Margin/TimerRow" unique_id=389801764]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 48
 text = "0:30"
 
 [node name="CountdownOverlay" type="Control" parent="." unique_id=936403836]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -246,7 +245,7 @@ alignment = 1
 
 [node name="CountdownLabel" type="Label" parent="CountdownOverlay/CenterContainer/Panel/Content" unique_id=861414164]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 48
 text = "NEXT QUESTION IN..."
 horizontal_alignment = 1
 
@@ -293,16 +292,18 @@ alignment = 1
 
 [node name="MessageLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Panel/Content" unique_id=1291307923]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 56
 text = "RETURN TO LOBBY?"
 horizontal_alignment = 1
 
 [node name="HintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Panel/Content" unique_id=1838257918]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Current game progress will be lost."
 horizontal_alignment = 1
 
 [node name="KeyHintLabel" type="Label" parent="QuitConfirmOverlay/CenterContainer/Panel/Content" unique_id=1368110540]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Press 🔴 RED (any player) to confirm — ESC or any other button cancels"
 horizontal_alignment = 1
