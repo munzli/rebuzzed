@@ -1,42 +1,43 @@
 # 🎮 Rebuzzed 🎮
 
 Rebuzzed is a quiz and trivia game for up to 4 players. The game uses
-PlayStation Buzz USB controllers, and it is built with
-[Godot 4.7](https://godotengine.org/). Quiz content comes from
-[opentdb.com](https://opentdb.com/) (Open Trivia Database) format JSON files.
+PlayStation Buzz USB controllers. Godot 4.7 is the game engine. Quiz
+content comes from [opentdb.com](https://opentdb.com/) (Open Trivia
+Database) format JSON files.
 
 ![Rebuzzed screenshot](docs/screenshot.png)
 
 ## Features
 
-- **4-player multiplayer.** Up to 4 players join with the red buzzer on the
-  Buzz controller and race to lock in answers.
-- **Buzz controller and keyboard support.** The game gives full controller
-  support, with a keyboard fallback for testing without hardware (see
-  [Keyboard controls](#keyboard-controls)).
-- **opentdb.com quiz format.** A player can add any number of opentdb-format
-  JSON files to `data/`. The game pools every question from every file
-  together and shuffles them. Quiz files stay external and user-editable,
-  not baked into the game binary.
+- **4-player multiplayer.** Up to 4 players join with the red buzzer on
+  the Buzz controller. They compete to lock in an answer first.
+- **Buzz controller and keyboard support.** The game supports the Buzz
+  controller and the keyboard. The keyboard is a fallback for tests
+  without hardware (see [Keyboard controls](#keyboard-controls)).
+- **opentdb.com quiz format.** A player can add any number of
+  opentdb-format JSON files to `data/`. The game pools every question
+  from every file, and shuffles them into random order. Quiz files stay
+  external and user-editable. The exported game does not include them.
 - **Online quiz source.** Instead of local files, the lobby can fetch a
-  category live from opentdb.com — see [Quiz content](#quiz-content).
-- **Difficulty-based scoring.** Base points scale with the difficulty of the
-  question (easy, medium, or hard), plus a speed bonus for a fast lock-in.
-- **"First to lock in" highlight.** The fastest player each round gets a
-  gold border and a ⚡ badge.
+  category live from opentdb.com or the-trivia-api.com. See [Quiz content](#quiz-content).
+- **Difficulty-based scoring.** Base points scale with the difficulty of
+  the question (easy, medium, or hard). A fast lock-in also earns a speed
+  bonus.
+- **"First to lock in" highlight.** The fastest player each round gets a ⚡
+  badge.
 - **Saved player names.** The game remembers names typed in the lobby for
   the next session.
 
 ## Requirements
 
 - [Godot 4.7](https://godotengine.org/) (to run from source or export builds)
-- PlayStation Buzz USB controllers (optional — keyboard works too)
-- Windows/macOS/Linux
+- PlayStation Buzz USB controllers (optional — the keyboard also works)
+- Windows, macOS, or Linux
 
 ## Running
 
-Open `project.godot` in the Godot editor and press **Play**, or run headless from
-the command line:
+Open `project.godot` in the Godot editor, and press **Play**. As an
+alternative, run the game directly from the command line:
 
 ```bash
 godot --path .
@@ -51,13 +52,13 @@ The project includes export presets for Linux and macOS
 godot --headless --export-release "Linux" builds/linux/rebuzzed.x86_64
 ```
 
-For macOS, see [docs/macos-build.md](docs/macos-build.md). It needs an
-extra one-time step beyond the export itself, to build the GDExtension
-that the Buzz controller requires on that platform.
+For macOS, see [docs/macos-build.md](docs/macos-build.md). It needs one
+extra step beyond the export: build the GDExtension that the Buzz
+controller needs on that platform.
 
 Quiz data lives outside the exported binary and the `.pck` file (see
-[Quiz content](#quiz-content)). Copy the `data/` folder next to the exported
-executable after the build.
+[Quiz content](#quiz-content)). Copy the `data/` folder next to the
+exported executable after the build.
 
 ## Controls
 
@@ -71,19 +72,20 @@ executable after the build.
 | 🟩 Green | Part of the start sequence | Select the green answer |
 | 🟨 Yellow | Part of the start sequence | Select the yellow answer |
 
-Once at least one player joins, enter the sequence 🟦 → 🟧 → 🟩 → 🟨 (from any
-player, on any controller) to start the game.
+When at least one player joins, enter the sequence 🟦 → 🟧 → 🟩 → 🟨 to
+start the game. Any player, on any controller, can enter it.
 
-Hold 🟦 and 🟨 together, from any single player, at any point during a game.
-This opens a "return to lobby" confirmation. Red confirms. Any other button
-cancels.
+Hold 🟦 and 🟨 together, from any single player, at any time during a
+game. This opens a "return to lobby" confirmation. Red confirms. Any
+other button cancels.
 
-Before any player joins, press 🟨 alone to open the quiz source picker (see
-[Quiz content](#quiz-content)).
+Before any player joins, press 🟨 alone to open the quiz source picker
+(see [Quiz content](#quiz-content)).
 
 ### Keyboard controls
 
-Used as a testing convenience for play without physical controllers.
+The keyboard controls are a convenience for tests without physical
+controllers.
 
 | Player | Join / Lock in | Blue | Orange | Green | Yellow |
 |--------|-----------------|------|--------|-------|--------|
@@ -97,8 +99,8 @@ confirmation during a game.
 
 ## Quiz content
 
-Rebuzzed pools questions from one of three sources, picked in the lobby:
-local JSON files, or a category fetched live from
+Rebuzzed pools questions from one of three sources. The lobby picks the
+source: local JSON files, or a category fetched live from
 [opentdb.com](https://opentdb.com/) or
 [the-trivia-api.com](https://the-trivia-api.com/).
 
@@ -106,14 +108,14 @@ local JSON files, or a category fetched live from
 
 Add any number of [opentdb.com](https://opentdb.com/api_config.php)-format
 JSON files to the `data/` folder (see `data/all-opentdb.json` for an
-example). The game pools every question from every file together, and
-shuffles them into a random order each game.
+example). The game pools every question from every file, and shuffles
+them into random order each game.
 
 ### Online (opentdb.com or the-trivia-api.com)
 
-Before any player joins, press 🟨 to open the quiz source picker, then
-select "OPENTDB.COM" or "THE TRIVIA API" to browse categories fetched live
-from that source:
+Before any player joins, press 🟨 to open the quiz source picker. Then
+select "OPENTDB.COM" or "THE TRIVIA API" to browse categories fetched
+live from that source:
 
 | Button | Action |
 |--------|--------|
@@ -121,23 +123,23 @@ from that source:
 | 🟧 / 🟨 | Question amount −5 / +5 (5–50) |
 | 🔴 | Confirm the highlighted row |
 
-The top row of the category list, "← BACK", returns to the source choice.
-The picker remembers the last source, category, and amount chosen, and
-restores them next time it opens.
+The top row of the category list, "← BACK", returns to the source
+choice. The picker remembers the last source, category, and amount
+chosen, and restores them next time it opens.
 
-Both sources fetch their category list live: opentdb.com from
-`api_category.php`, the-trivia-api.com from its `/v2/metadata` endpoint.
+Both sources fetch their category list live. opentdb.com uses
+`api_category.php`. the-trivia-api.com uses its `/v2/metadata` endpoint.
 
 ### Scoring
 
 Base points per question scale with the difficulty of the question
-(`easy` = 100, `medium` = 150, `hard` = 200), plus a speed bonus for a fast
-lock-in.
+(`easy` = 100, `medium` = 150, `hard` = 200). A fast lock-in also earns a
+speed bonus.
 
 The `data/` folder also holds `settings.json` (saved player names and the
 last-used quiz source picker state). The game creates this file
-automatically, and it is not part of the exported build. You can edit it,
-or any local quiz file, without a rebuild of the game.
+automatically. It is not part of the exported build. You can edit it, or
+any local quiz file, at any time. You do not need to rebuild the game.
 
 ## Project structure
 
@@ -160,21 +162,20 @@ rebuzzed/
 ## Verifying the Buzz Controller Button Mapping
 
 Buzz controllers report as a single USB HID device with 20 buttons (4
-players × 5 buttons each). But the raw button index that Godot sees is not
-guaranteed to match the index hardcoded in
-`scripts/autoload/input_manager.gd`.
+players × 5 buttons each). But the raw button index that Godot sees does
+not always match the index in `scripts/autoload/input_manager.gd`.
 
-Run `scenes/debug/controller_test.tscn` directly in the editor. Press buttons
-on a real controller. If needed, correct `InputManager.BUTTON_MAP` to
-match.
+Run `scenes/debug/controller_test.tscn` directly in the editor. Press
+buttons on a real controller. If needed, correct `InputManager.BUTTON_MAP`
+to match.
 
 ## Acknowledgments
 
 This project follows the idea of
 [gardenofegan/buzz-controller-quiz-game](https://github.com/gardenofegan/buzz-controller-quiz-game),
-an Electron and JavaScript version of the same game.
+an Electron and JavaScript version of a similar game.
 
-The project maintainers used generative AI tools during development.
+This has been developed using generative AI tools and is still a proof of concept.
 
 ## License
 
@@ -183,7 +184,7 @@ Rebuzzed licenses its code under the [GNU GPL v3.0](LICENSE).
 Bundled fonts keep their own licenses, not GPL:
 [Windows Command Prompt](assets/fonts/WindowsCommandPrompt-LICENSE.txt), by
 McFood, is under a Creative Commons Attribution-ShareAlike 3.0 license.
-[Noto Color Emoji](assets/fonts/NotoColorEmoji-OFL.txt) is from the
-Google Noto project, under the SIL Open Font License 1.1, and also offers a
-dual OFL-1.1/[Apache-2.0](assets/fonts/NotoColorEmoji-LICENSE-Apache-2.0.txt)
+[Noto Color Emoji](assets/fonts/NotoColorEmoji-OFL.txt) is from the Google
+Noto project, under the SIL Open Font License 1.1. It also offers a dual
+OFL-1.1/[Apache-2.0](assets/fonts/NotoColorEmoji-LICENSE-Apache-2.0.txt)
 license.

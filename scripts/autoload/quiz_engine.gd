@@ -11,9 +11,9 @@ extends Node
 ##
 ## Expected shape per local file: {"response_code": 0, "results": [{"question",
 ## "correct_answer","incorrect_answers":[...],"difficulty",...}, ...]}
-## See data/music-opentdb.json for an example, or fetch a fresh set from
+## See data/all-opentdb.json for an example, or fetch a fresh set from
 ## https://opentdb.com/api_config.php. On load, the game shuffles correct and
-## incorrect answers into the 4 color slots. "boolean" (true/false) questions
+## incorrect answers into the 4 color slots. "boolean" (true or false) questions
 ## only fill 2 of the 4 color slots. The game leaves the rest blank.
 ##
 ## load_remote_quiz() accepts a live opentdb.com fetch, in the same shape as
@@ -73,7 +73,7 @@ func _ready() -> void:
 ## folder next to the exported executable, or next to the .app bundle on
 ## macOS. The game uses this folder for quiz files, and other files reuse it
 ## too, for example the saved player names in lobby_screen.gd. Anything that
-## should stay inspectable and editable without a change to the game binary
+## must stay inspectable and editable without a change to the game binary
 ## can live here. When the game runs in the editor, there is no exported
 ## executable yet. In that case, the function falls back to the data/ folder
 ## of the project on disk. The game still reads this folder as an external
@@ -278,7 +278,7 @@ func _normalize_opentdb(data: Dictionary) -> Dictionary:
 				if pool[j].correct:
 					correct_color = color
 			else:
-				# opentdb "boolean" (true/false) questions only have 2 answers. The code
+				# opentdb "boolean" (true or false) questions only have 2 answers. The code
 				# leaves the remaining color slots blank, so the UI hides them.
 				answers[color] = ""
 

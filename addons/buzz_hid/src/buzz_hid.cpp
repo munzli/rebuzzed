@@ -5,10 +5,10 @@
 
 using namespace godot;
 
-// Rescanning for newly plugged/unplugged adaptors on every single frame
-// would mean calling hid_enumerate() (which walks the whole USB/HID tree)
-// far more often than needed. Once a second is frequent enough for a
-// physical USB device to feel instantly connected to a player.
+// A scan for newly plugged and unplugged adapters on every single frame
+// calls hid_enumerate() (which walks the whole USB/HID tree) far more
+// often than needed. Once a second is frequent enough for a physical USB
+// device to feel instantly connected to a player.
 static constexpr double RESCAN_INTERVAL_SEC = 1.0;
 
 void BuzzHid::_bind_methods() {
@@ -41,16 +41,16 @@ void BuzzHid::poll() {
 			continue;
 		}
 		unsigned char report[64];
-		// Non-blocking: hid_set_nonblocking() was set in rescan() when the
-		// device was opened, so this returns 0 immediately when there is no
-		// new report waiting, instead of stalling the game's frame.
+		// Non-blocking: rescan() set hid_set_nonblocking() when it opened
+		// the device. As a result, this returns 0 immediately when no new
+		// report is waiting, instead of stalling the frame of the game.
 		int result;
 		while ((result = hid_read(dev.handle, report, sizeof(report))) > 0) {
 			decode_report(report, result, dev.buttons);
 		}
 		if (result < 0) {
-			// The adaptor was unplugged. Let the next rescan() notice it is
-			// gone and drop it from the list, instead of removing it here
+			// The adapter was unplugged. The next rescan() notices this, and
+			// drops it from the list. This avoids a removal here,
 			// mid-iteration.
 			hid_close(dev.handle);
 			dev.handle = nullptr;
@@ -59,9 +59,9 @@ void BuzzHid::poll() {
 }
 
 void BuzzHid::decode_report(const unsigned char *report, int len, bool (&out)[BUTTON_COUNT]) {
-	// See the layout comment in buzz_hid.h. Bounds-checked against the
-	// actual report length in case a future/different adaptor revision
-	// sends a shorter report than expected.
+	// See the layout comment in buzz_hid.h. This checks each index against
+	// the actual report length, in case a future or different adapter
+	// revision sends a shorter report than expected.
 	for (int i = 0; i < BUTTON_COUNT; i++) {
 		int byte_index = 2 + i / 8;
 		int bit_index = i % 8;
@@ -95,10 +95,10 @@ void BuzzHid::rescan() {
 	std::vector<std::string> seen_paths;
 
 	for (struct hid_device_info *cur = list; cur != nullptr; cur = cur->next) {
-		// Generic Desktop page (0x01), Joystick usage (0x04) -- matches
-		// what scripts/debug/buzz_hid_diag.py found for this device. Not
-		// matching on product_id, since different Buzz adaptor hardware
-		// revisions have shipped with different USB product IDs (0x0002 on
+		// Generic Desktop page (0x01), Joystick usage (0x04). This matches
+		// what scripts/debug/buzz_hid_diag.py found for this device. This
+		// check does not match on product_id: different Buzz adapter
+		// hardware revisions ship with different USB product IDs (0x0002 on
 		// some units, 0x1000 on others).
 		if (cur->usage_page != 0x01 || cur->usage != 0x04) {
 			continue;
@@ -135,9 +135,10 @@ void BuzzHid::rescan() {
 
 	hid_free_enumeration(list);
 
-	// Drop entries for adaptors that are no longer plugged in (either
-	// because poll() already closed the handle after a failed read, or
-	// because they vanished between rescans without us noticing).
+	// This drops entries for adapters that are no longer plugged in. This
+	// happens either because poll() already closed the handle after a
+	// failed read, or because an adapter vanished between rescans without
+	// notice.
 	for (int i = (int)devices.size() - 1; i >= 0; i--) {
 		bool still_listed = false;
 		for (const std::string &path : seen_paths) {

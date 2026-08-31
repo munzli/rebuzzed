@@ -1,8 +1,10 @@
 extends Control
-## Standalone debug scene: logs raw controller button indices as a player
-## presses them, so a real Buzz controller layout can be confirmed and
-## corrected against InputManager.BUTTON_MAP. Not part of the normal game
-## flow — run this scene directly from the editor.
+## This is a standalone debug scene. It logs raw controller button indices
+## as a player presses them. This scene lets a player confirm and correct
+## a real Buzz controller's layout against InputManager.BUTTON_MAP.
+##
+## The scene is not part of the normal game flow. Run it directly from
+## the editor.
 
 const MAX_LINES := 200
 

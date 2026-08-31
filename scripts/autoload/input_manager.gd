@@ -55,14 +55,16 @@ var index_to_button: Dictionary = {}
 var _previous_states: Dictionary = {}
 var _player_color_to_keys: Dictionary = {}
 
-## On macOS, SDL3 (which Godot uses for joypad support since 4.5) does not
-## surface the Buzz controller through Input at all -- it has no analog
-## axes, which SDL's joystick backend appears to require, even though it
-## correctly self-declares as a HID Joystick. The addons/buzz_hid
-## GDExtension works around this by talking to the adaptor directly over
-## HID. It only builds for macOS (see addons/buzz_hid/buzz_hid.gdextension),
-## so this is null on Linux/Windows, where the normal Input path below
-## already works.
+## Godot uses SDL3 for joypad support since version 4.5. On macOS, SDL3
+## does not find the Buzz controller through Input at all. The adapter
+## correctly declares itself as a HID Joystick, but has no analog axes.
+## This appears to be why SDL's joystick backend does not find it.
+##
+## The addons/buzz_hid GDExtension works around this. It talks to the
+## adapter directly over HID. This extension only builds for macOS (see
+## addons/buzz_hid/buzz_hid.gdextension). As a result, this variable is
+## null on Linux and Windows, where the normal Input path below already
+## works.
 var _buzz_hid: Object = null
 var _buzz_hid_known_devices: Array = []
 

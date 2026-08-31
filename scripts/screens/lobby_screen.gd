@@ -18,7 +18,8 @@ const SEQUENCE_ICON_SLOT_SIZE := Vector2(56, 56)
 const KEYBOARD_HELP_FONT_SIZE := 28
 const KEYBOARD_HELP_EMOJI_SLOT_SIZE := Vector2(32, 32)
 
-## Primary key per player action, mirroring InputManager.KEYBOARD_MAP
+## This is the primary key for each player action. It mirrors
+## InputManager.KEYBOARD_MAP.
 const KEYBOARD_HELP := [
 	{"label": "P1", "red": "1", "blue": "Q", "orange": "A", "green": "Z/Y", "yellow": "X"},
 	{"label": "P2", "red": "3", "blue": "E", "orange": "D", "green": "C", "yellow": "V"},

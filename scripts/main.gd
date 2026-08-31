@@ -1,5 +1,5 @@
 extends Control
-## Root: swaps between Lobby / Game / GameOver screens.
+## Root: swaps between the Lobby, Game, and GameOver screens.
 
 const PLAYER_KEYS := ["player1", "player2", "player3", "player4"]
 

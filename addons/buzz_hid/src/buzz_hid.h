@@ -8,22 +8,24 @@
 
 namespace godot {
 
-// Talks to the Sony/Logitech Buzz! USB controller adaptor directly via
-// hidapi, bypassing Godot's/SDL's joystick subsystem entirely. SDL3 (which
-// Godot uses for joypad support since 4.5) does not surface this device on
-// macOS -- it correctly self-declares as a HID Joystick (usage_page=0x01,
-// usage=0x04), but has zero analog axes, which SDL's joystick backend
-// appears to require. See scripts/debug/buzz_hid_diag.py for how this was
-// diagnosed.
+// This class talks to the Sony/Logitech Buzz! USB controller adapter
+// directly, over hidapi. This bypasses the joystick subsystem of Godot and
+// SDL entirely. Godot uses SDL3 for joypad support since version 4.5. On
+// macOS, SDL3 does not find this device: the adapter correctly declares
+// itself as a HID Joystick (usage_page=0x01, usage=0x04), but has zero
+// analog axes. This appears to be why SDL's joystick backend does not
+// find it. See scripts/debug/buzz_hid_diag.py for how the team found
+// this.
 //
-// Report format (empirically confirmed against a real device, see
-// scripts/debug/buzz_hid_diag.py output): a 5-byte input report where the
-// 20 buttons pack sequentially, one bit each, starting at byte[2] bit 0:
-// byte[2] bits 0-7 = buttons 0-7, byte[3] bits 0-7 = buttons 8-15,
-// byte[4] bits 0-3 = buttons 16-19. This is the same button order as
-// InputManager.BUTTON_MAP (red, yellow, green, orange, blue per player,
-// 4 players), so raw index N here means exactly the same thing as raw
-// index N already does for the working joypad path on Linux/Windows.
+// Report format (confirmed against a real device, see the output of
+// scripts/debug/buzz_hid_diag.py): a 5-byte input report, where the 20
+// buttons pack sequentially, one bit each. The sequence starts at byte[2]
+// bit 0: byte[2] bits 0-7 are buttons 0-7, byte[3] bits 0-7 are buttons
+// 8-15, byte[4] bits 0-3 are buttons 16-19. This is the same button order
+// as InputManager.BUTTON_MAP (red, yellow, green, orange, blue per
+// player, 4 players). As a result, raw index N here means the same thing
+// as raw index N already does for the working joypad path on Linux and
+// Windows.
 class BuzzHid : public Object {
 	GDCLASS(BuzzHid, Object);
 
@@ -37,9 +39,9 @@ public:
 	BuzzHid();
 	~BuzzHid();
 
-	// Call this once per frame (see InputManager._process()). Rescans for
-	// newly connected/disconnected adaptors periodically, and reads any
-	// pending HID reports from already-open ones.
+	// Call this once per frame (see InputManager._process()). This scans
+	// again for newly connected and disconnected adapters at intervals, and
+	// reads any pending HID reports from adapters that are already open.
 	void poll();
 
 	Array get_connected_devices() const;

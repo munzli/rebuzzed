@@ -1,6 +1,6 @@
 extends PanelContainer
 class_name PlayerScoreBox
-## HUD box for one player: name, score, selection/lock status.
+## HUD box for one player: name, score, selection and lock status.
 
 ## Reuses the same 4 colors as the answer buttons, in the same order.
 const PLAYER_COLORS := {

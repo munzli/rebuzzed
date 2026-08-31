@@ -207,7 +207,7 @@ func stop_timer() -> void:
 
 
 ## Resumes the timer without a reset of timer_value (unlike start_timer()).
-## The game calls this function to resume the timer after a cancelled
+## The game calls this function to resume the timer after a canceled
 ## "return to lobby" confirmation.
 func resume_timer() -> void:
 	_timer.start()

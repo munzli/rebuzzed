@@ -1,12 +1,12 @@
 extends Control
 class_name QuizSourceOverlay
 ## Lets a player pick the quiz source: local files, or a category fetched
-## live from opentdb.com or the-trivia-api.com. Any player, any controller,
-## matching the rest of the lobby. Navigation: Blue/Green move the cursor,
-## Orange/Yellow adjust the question amount, Red confirms the highlighted
-## row. "Back" is just the top row of the category list, so no separate
-## cancel gesture is needed on a controller (ESC also works, for keyboard
-## testing).
+## live from opentdb.com or the-trivia-api.com. This matches the rest of
+## the lobby: any player, on any controller, can use it. Navigation: Blue
+## or Green move the cursor. Orange or Yellow adjust the question amount.
+## Red confirms the highlighted row. "Back" is just the top row of the
+## category list, so a controller does not need a separate cancel gesture
+## (ESC also works, for keyboard testing).
 ##
 ## Both opentdb.com and the-trivia-api.com list their categories live over
 ## the network: opentdb.com via api_category.php, the-trivia-api.com via its
@@ -245,10 +245,10 @@ func _update_row_highlight() -> void:
 
 func _fetch_opentdb_categories() -> void:
 	# Locks button input (see _on_button_pressed) until the fetch completes,
-	# the same as a question fetch. Without this, a player could switch to
-	# a different row, or a different provider, while this fetch is still in
-	# flight, and confirm a row that no longer matches what this fetch will
-	# return.
+	# the same as a question fetch. Without this, a player can switch to a
+	# different row, or a different provider, while the fetch is still in
+	# flight. The player can then confirm a row that no longer matches what
+	# the fetch returns.
 	_fetching = true
 	status_label.text = "Loading categories..."
 	var err := category_request.request(OPENTDB_CATEGORY_URL)
@@ -397,9 +397,9 @@ func _on_questions_request_completed(
 
 func _close(new_state: Dictionary) -> void:
 	# Deferred: InputManager.button_pressed can still be mid-dispatch to other
-	# listeners, for example LobbyScreen, for this same press. Closing the
-	# overlay synchronously here would let LobbyScreen's still-open guard
-	# check miss this same press and mistake it for a player that joins.
+	# listeners, for example LobbyScreen, for this same press. A synchronous
+	# close here can let LobbyScreen's still-open guard check miss this same
+	# press, and mistake it for a player that joins.
 	_finish_close.call_deferred(new_state)
 
 
