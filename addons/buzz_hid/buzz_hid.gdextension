@@ -1,0 +1,9 @@
+[configuration]
+
+entry_symbol = "buzz_hid_library_init"
+compatibility_minimum = "4.5"
+
+[libraries]
+
+macos.debug = "res://addons/buzz_hid/bin/libbuzz_hid.macos.template_debug.dylib"
+macos.release = "res://addons/buzz_hid/bin/libbuzz_hid.macos.template_release.dylib"
