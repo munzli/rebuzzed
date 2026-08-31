@@ -8,3 +8,14 @@
 
 # Exported build output - regenerate via `godot --export-release`.
 /builds/
+
+# buzz_hid GDExtension (macOS-only, see addons/buzz_hid/src/buzz_hid.h):
+# fetched dependencies and build artifacts, none of which are source.
+# godot-cpp: git clone -b 4.5 --depth 1 https://github.com/godotengine/godot-cpp.git
+# third_party/hidapi: git clone --depth 1 https://github.com/libusb/hidapi.git
+/addons/buzz_hid/godot-cpp/
+/addons/buzz_hid/third_party/hidapi/
+/addons/buzz_hid/bin/
+/addons/buzz_hid/src/*.os
+/addons/buzz_hid/third_party/hidapi/**/*.os
+/addons/buzz_hid/.sconsign*.dblite

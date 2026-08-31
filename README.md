@@ -44,12 +44,16 @@ godot --path .
 
 ### Exporting a build
 
-The project includes an export preset for Linux (`export_presets.cfg`). To
-build, run:
+The project includes export presets for Linux and macOS
+(`export_presets.cfg`). For Linux:
 
 ```bash
 godot --headless --export-release "Linux" builds/linux/rebuzzed.x86_64
 ```
+
+For macOS, see [docs/macos-build.md](docs/macos-build.md). It needs an
+extra one-time step beyond the export itself, to build the GDExtension
+that the Buzz controller requires on that platform.
 
 Quiz data lives outside the exported binary and the `.pck` file (see
 [Quiz content](#quiz-content)). Copy the `data/` folder next to the exported

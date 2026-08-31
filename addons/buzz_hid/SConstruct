@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+import os
+
+env = SConscript("godot-cpp/SConstruct")
+
+env.Append(CPPPATH=["src/"])
+sources = Glob("src/*.cpp")
+
+# hidapi, compiled directly from source (fetched via:
+#   git clone --depth 1 https://github.com/libusb/hidapi.git third_party/hidapi
+# ) instead of linked against a Homebrew-installed libhidapi.dylib. Linking
+# against Homebrew's dylib bakes an absolute path (e.g.
+# /opt/homebrew/opt/hidapi/lib/libhidapi.0.dylib) into buzz_hid's own
+# dylib, which only resolves on the exact machine it was built on -- on any
+# other Mac, the whole GDExtension silently fails to load. Compiling the
+# single macOS backend source file (mac/hid.c) directly into buzz_hid
+# avoids any external runtime dependency (besides IOKit/CoreFoundation,
+# which are part of macOS itself), and also means SCons compiles it for
+# both architectures uniformly under arch=universal -- no separate
+# Homebrew-under-Rosetta + lipo step needed for a universal build.
+env.Append(CPPPATH=["third_party/hidapi/hidapi"])
+sources.append("third_party/hidapi/mac/hid.c")
+env.Append(LINKFLAGS=["-framework", "IOKit", "-framework", "CoreFoundation"])
+
+if env["platform"] == "macos":
+	library = env.SharedLibrary(
+		"bin/libbuzz_hid.{}.{}.dylib".format(env["platform"], env["target"]),
+		source=sources,
+	)
+else:
+	# This extension only targets macOS: it exists to work around a
+	# macOS-specific SDL3/joystick detection gap (see buzz_hid.h). Linux and
+	# Windows already read the Buzz controller fine via Godot's normal
+	# Input/joypad API.
+	print("buzz_hid only builds for platform=macos.")
+	Exit(1)
+
+Default(library)

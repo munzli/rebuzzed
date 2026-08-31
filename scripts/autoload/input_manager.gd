@@ -55,6 +55,17 @@ var index_to_button: Dictionary = {}
 var _previous_states: Dictionary = {}
 var _player_color_to_keys: Dictionary = {}
 
+## On macOS, SDL3 (which Godot uses for joypad support since 4.5) does not
+## surface the Buzz controller through Input at all -- it has no analog
+## axes, which SDL's joystick backend appears to require, even though it
+## correctly self-declares as a HID Joystick. The addons/buzz_hid
+## GDExtension works around this by talking to the adaptor directly over
+## HID. It only builds for macOS (see addons/buzz_hid/buzz_hid.gdextension),
+## so this is null on Linux/Windows, where the normal Input path below
+## already works.
+var _buzz_hid: Object = null
+var _buzz_hid_known_devices: Array = []
+
 
 func _ready() -> void:
 	for player in BUTTON_MAP.keys():
@@ -73,6 +84,10 @@ func _ready() -> void:
 
 	for device in Input.get_connected_joypads():
 		_on_controller_connection_changed(device, true)
+
+	if Engine.has_singleton("BuzzHid"):
+		_buzz_hid = Engine.get_singleton("BuzzHid")
+		print("[InputManager] BuzzHid extension active (macOS HID workaround).")
 
 	print("[InputManager] Initialized. Waiting for Buzz controllers...")
 
@@ -94,6 +109,46 @@ func _process(_delta: float) -> void:
 			prev[i] = pressed
 
 		_previous_states[device] = prev
+
+	if _buzz_hid:
+		_process_buzz_hid()
+
+
+## Mirrors the Input.get_connected_joypads() loop above, but reads button
+## state from the BuzzHid GDExtension instead. Uses a distinct dictionary
+## key ("buzz_hid_N") so a BuzzHid device id never collides with a regular
+## joypad device id in _previous_states, even though both number from 0.
+func _process_buzz_hid() -> void:
+	_buzz_hid.poll()
+
+	var connected: Array = _buzz_hid.get_connected_devices()
+	for device in connected:
+		if not _buzz_hid_known_devices.has(device):
+			_buzz_hid_known_devices.append(device)
+			_on_controller_connection_changed(device, true)
+
+	for device in _buzz_hid_known_devices.duplicate():
+		if not connected.has(device):
+			_buzz_hid_known_devices.erase(device)
+			_on_controller_connection_changed(device, false)
+
+	for device in connected:
+		var state_key: String = "buzz_hid_%d" % device
+		var prev: Dictionary = _previous_states.get(state_key, {})
+
+		for i in range(RAW_BUTTON_COUNT):
+			var pressed: bool = _buzz_hid.is_button_pressed(device, i)
+			var was_pressed: bool = prev.get(i, false)
+
+			if pressed and not was_pressed:
+				raw_button_pressed.emit(device, i)
+				if index_to_button.has(i):
+					var info: Dictionary = index_to_button[i]
+					button_pressed.emit(info.player, info.color)
+
+			prev[i] = pressed
+
+		_previous_states[state_key] = prev
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -117,6 +172,11 @@ func is_pressed(player: String, color: String) -> bool:
 	for device in Input.get_connected_joypads():
 		if Input.is_joy_button_pressed(device, button_index):
 			return true
+
+	if _buzz_hid:
+		for device in _buzz_hid.get_connected_devices():
+			if _buzz_hid.is_button_pressed(device, button_index):
+				return true
 	return false
 
 
